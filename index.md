@@ -4,7 +4,7 @@
 
 Text Example.
 
-![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+![Alt Text](https://cdn.discordapp.com/attachments/460477316343136276/881083924439240714/snail.gif)
 
 ```markdown
 Syntax highlighted code block
