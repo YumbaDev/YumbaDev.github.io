@@ -4,13 +4,10 @@
 
 Text Example.
 
-![Alt Text](https://cdn.discordapp.com/attachments/460477316343136276/886083610065633340/projectKKnightRunLoop.gif)
+![Alt Text](https://cdn.discordapp.com/attachments/460477316343136276/886086095060750336/projectKKnightRunLoop3.gif)
 
 ```markdown
 Syntax highlighted code block
-
-
-![Alt Text](https://cdn.discordapp.com/attachments/460477316343136276/886083610065633340/projectKKnightRunLoop.gif)
 
 # Header 1
 ## Header 2
