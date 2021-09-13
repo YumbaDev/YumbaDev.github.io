@@ -82,7 +82,7 @@ nav img{
 }
 .hero-btn:hover{
 	border: 1px solid #74A4BC;
-	background: #777;
+	background: #74A4BC;
 	transition: 0.5s;
 }
 
