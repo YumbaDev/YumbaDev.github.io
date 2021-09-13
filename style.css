@@ -35,10 +35,12 @@ nav img{
 	text-decoration: none;
 	font-size: 13px;
 }
+
+/*	Underlines HOME, ABOUT, BLOG, CONTACT when hovered after	*/
 .nav-links ul li::after{
 	content: '';
 	width: 0%;
-	height: 2px;
+	height: 20px;
 	background: #74A4BC;
 	display: block;
 	margin: auto;
