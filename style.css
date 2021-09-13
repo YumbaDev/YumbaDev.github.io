@@ -134,11 +134,9 @@ nav .fas{
 h1{
 	font-size: 36px;
 	font-weight: 600;
-	/*was originally BLACK*/
-	color: #777;
 }
 p{
-	color: #D3D3D3;		/* #777	*/
+	color: #777;		/* #777	*/
 	font-size: 14px;
 	font-weight: 300;
 	line-height: 22px;
