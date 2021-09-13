@@ -122,11 +122,10 @@ nav .fas{
 	
 /*------ about section -------*/
 .about{
-	width: 100%; /*80*/
+	width: 80%;
 	margin: auto;
 	text-align: center;
 	padding-top: 100px;
-	background: #232c3d;
 }
 h1{
 	font-size: 36px;
