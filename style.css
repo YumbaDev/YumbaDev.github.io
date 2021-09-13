@@ -7,6 +7,9 @@
 	min-height: 100vh;
 	width: 100%;
 	background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url('eduford_img/banner.png');
+	/**/
+	background-attachment: fixed;
+	/**/
 	background-position: center;
 	background-size: cover;
 	position: relative;
@@ -79,7 +82,7 @@ nav img{
 }
 .hero-btn:hover{
 	border: 1px solid #74A4BC;
-	background: #74A4BC;
+	background: #777;
 	transition: 0.5s;
 }
 
