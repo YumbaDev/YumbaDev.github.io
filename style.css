@@ -126,14 +126,13 @@ nav .fas{
 	margin: auto;
 	text-align: center;
 	padding-top: 100px;
-	color: #202838;
 }
 h1{
 	font-size: 36px;
 	font-weight: 600;
 }
 p{
-	color: #FF0000;
+	color: #777;
 	font-size: 14px;
 	font-weight: 300;
 	line-height: 22px;
