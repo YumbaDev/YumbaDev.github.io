@@ -126,10 +126,11 @@ nav .fas{
 /*------ about section -------*/
 
 .about{
-	width: 80%;
+	width: 100%;		/*  80%  */
 	margin: auto;
 	text-align: center;
 	padding-top: 100px;
+	color: #D3D3D3;
 }
 h1{
 	font-size: 36px;
