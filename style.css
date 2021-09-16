@@ -133,7 +133,7 @@ nav .fas{
 	background-color: #D3D3D3;
 }
 h1{
-	font-size: 36px;
+	font-size: 24px;	/* 36px	*/
 	font-weight: 600;
 }
 p{
@@ -141,7 +141,7 @@ p{
 	font-size: 14px;
 	font-weight: 300;
 	line-height: 22px;
-	padding: 10px;
+	padding: 30px; 		/* 10px */
 }
 
 	
