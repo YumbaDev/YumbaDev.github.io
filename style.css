@@ -130,14 +130,15 @@ nav .fas{
 	margin: auto;
 	text-align: center;
 	padding-top: 100px;
-	background-color: #D3D3D3;	/* #D3D3D3; (white), #D3D3D3; (purple) */
+	background: #272c38;	/* #D3D3D3; (white), #D3D3D3; (purple) */
 }
 h1{
 	font-size: 24px;	/* 36px	*/
 	font-weight: 600;
+	color: #fff;
 }
 p{
-	color: #777;		/* #777	*/
+	color: #fff;		/* #777	*/
 	font-size: 14px;
 	font-weight: 300;
 	line-height: 22px;
