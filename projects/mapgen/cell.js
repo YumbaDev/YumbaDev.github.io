@@ -7,14 +7,14 @@ function Cell(xPos, yPos, width){
 }
 
 Cell.prototype.paint = function(){
-	stroke('#534B62');		// Normal Color
+	stroke('#272c38');		// Normal Color
 	
 	if(!this.isWalkedOn){
-		fill('#534B62');	// Normal Color
+		fill('#272c38');	// Normal Color
 	}
 	
 	if(this.isWalkedOn){
-		fill('#A499B3');	// Light Color
+		fill('#6f727a');	// Light Color
 	}
 	
 	rect(this.x, this.y, this.w, this.w);

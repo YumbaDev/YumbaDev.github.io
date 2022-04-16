@@ -6,7 +6,7 @@ const GRID_WIDTH = 60;
 const GRID_HEIGHT = GRID_WIDTH;
 const CELL_WIDTH = 10;
 const BORDER_WIDTH = 1;
-const numSteps = Math.floor(GRID_WIDTH * GRID_HEIGHT * 0.4)
+const numSteps = Math.floor(GRID_WIDTH * GRID_HEIGHT * 0.6)
 
 
 //var dkShade = "#1B1725";
