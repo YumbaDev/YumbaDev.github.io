@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Clicker</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	
+	<body>
+		<h1 style="line-height: 50%">Clicks: <span id="clicks">0</span><h2>
+		
+		<div>
+			<p style="margin-top: 0; margin-bottom: 0;">
+				<input type="button" value="Click" onclick="manualIncrement()"></input>
+			</p>
+		</div>
+		
+		<br />
+		
+		<div>
+			<p style="margin-top: 0; margin-bottom: 0;">
+				Current Goal: <span id="clickGoal">0</span>
+			</p>
+		</div>
+		
+		<div>
+			<p style="margin-top: 0; margin-bottom: 0;">
+				<input type="button" value="Buy AutoClicker" onclick="buyClicker()"> 
+					<span id="numClickers">0</span>
+				</input>
+			</p>
+		</div>
+			
+		<script>
+			// Variable Initialization /////////////////////////////////////////////////
+			let clickCount = 0;
+			let numHitGoal = 0;
+			let goal = Math.floor(43.443 * Math.pow(Math.E, 1.0381 * numHitGoal)) + 7;
+			
+			let numClickers = 0;
+			
+			function initializeVars() {
+				document.getElementById("clicks").innerHTML = clickCount;
+				document.getElementById("clickGoal").innerHTML = goal;
+				document.getElementById("numClickers").innerHTML = numClickers;
+			}
+			
+			initializeVars();
+			
+			// UPDATE CALL /////////////////////////////////////////////////
+			
+			var updateClickCount = window.setInterval(function() {
+				// We want to update clickCount EVERY frame
+				document.getElementById("clicks").innerHTML = clickCount;
+				checkGoal();
+			}, 500);
+		
+			// onclick Functions /////////////////////////////////////////////////
+			function manualIncrement() {
+				clickCount++;
+				document.getElementById("clicks").innerHTML = clickCount;
+			}
+			
+			// Goal code /////////////////////////////////////////////////
+			function updateGoal() {				
+				goal = Math.floor(43.443 * Math.pow(Math.E, 1.0381 * numHitGoal)) + 7;
+				
+				// We want to update clickGoal ONLY when the condition is met, not EVERY frame
+				document.getElementById("clickGoal").innerHTML = goal;
+			}
+			
+			function checkGoal() {
+				if(clickCount >= goal)
+					{
+						numHitGoal++;
+						updateGoal();
+					}
+			}
+			
+			// Buy Auto Clicker /////////////////////////////////////////////////
+			function buyClicker() {
+				numClickers++;
+				
+				// We want to update numClickers ONLY when the condition is met, not EVERY frame
+				document.getElementById("numClickers").innerHTML = numClickers;
+			}
+			
+			// Auto Increment /////////////////////////////////////////////////
+			function autoIncrement() {
+				clickCount += numClickers;
+			}
+			
+			var autoClickAdder = window.setInterval(function() {
+				autoIncrement();
+			}, 500);
+			
+		</script>
+			
+	</body>
+</html>
