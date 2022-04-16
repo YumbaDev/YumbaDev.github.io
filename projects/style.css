@@ -1,0 +1,32 @@
+:root {
+	/*
+	--dkColor: #0F1422;
+	--Color: #fff;
+	--ltColor: #4C5F6B;
+	*/
+	
+	--dkColor: #0F1422;
+	--Color: #272c38;
+	--ltColor: #3f434e;
+	--Text: #cfd0d3;
+}
+
+body { 
+	background-color: var(--dkColor); 
+}
+
+h1 { 
+	color: var(--Text); 
+}
+
+li {
+	color: var(--Text);
+}
+
+a:link {
+	color: var(--Text);
+}
+
+a:visited {
+	color: var(--Text);
+}
