@@ -6,29 +6,47 @@
 	</head>
 	
 	<body>
-		<h1 style="line-height: 50%">Clicks: <span id="clicks">0</span><h2>
+	
+	<div class="info">
+		<h1>Clicks: <span id="clicks">0</span><h2>
 		
-		<div>
-			<p style="margin-top: 0; margin-bottom: 0;">
-				<input type="button" value="Click" onclick="manualIncrement()"></input>
-			</p>
-		</div>
+		<p style="margin-top: 0; margin-bottom: 0;">
+			<input type="button" value="Click" onclick="manualIncrement()"></input>
+		</p>
+	</div>
+	
+	<br />
+	
+	<div class="info">
+		<p style="margin-top: 0; margin-bottom: 0;">
+			Current Goal: <span id="clickGoal">0</span>
+		</p>
 		
-		<br />
-		
-		<div>
-			<p style="margin-top: 0; margin-bottom: 0;">
-				Current Goal: <span id="clickGoal">0</span>
-			</p>
-		</div>
-		
-		<div>
-			<p style="margin-top: 0; margin-bottom: 0;">
-				<input type="button" value="Buy AutoClicker" onclick="buyClicker()"> 
-					<span id="numClickers">0</span>
-				</input>
-			</p>
-		</div>
+		<p style="margin-top: 0; margin-bottom: 0;">
+			<input type="button" value="Buy AutoClicker" onclick="buyClicker()"> 
+				<span id="numClickers">0</span>
+			</input>
+		</p>
+	</div>
+	
+	<br />
+	
+	<div class="resources">
+		<p class="Title"><b>Resources</b></p>
+		<p class="resource">Food <span class="data" id="resrcFood">0</span></p>
+		<p class="resource">Wood <span class="data" id="resrcWood">0</span></p>
+		<p class="resource">Stone <span class="data" id="resrcStone">0</span></p>
+
+	</div>
+	
+	<!--
+	<div class="resources">
+		<p style="border-bottom-style: solid">Resources</p>
+		<p class="resource">Food: </p>
+		<p class="resource">Wood: </p>
+		<p class="resource">Stone: </p>
+	</div>
+	-->
 			
 		<script>
 			// Variable Initialization /////////////////////////////////////////////////
