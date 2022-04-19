@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<!-- new -->
+		<meta charset="utf-8" />
+	
 		<title>Clicker</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
@@ -33,83 +36,197 @@
 	
 	<div class="resources">
 		<p class="Title"><b>Resources</b></p>
-		<p class="resource">Food <span class="data" id="resrcFood">0</span></p>
-		<p class="resource">Wood <span class="data" id="resrcWood">0</span></p>
-		<p class="resource">Stone <span class="data" id="resrcStone">0</span></p>
-
+		<p class="resource"><img src="sprites/resources/icon_meat.png" class="resource"> Food <span class="data" id="resrcFood">0</span></p>
+		<p class="resource"><img src="sprites/resources/icon_wood.png" class="resource"> Wood <span class="data" id="resrcWood">0</span></p>
+		<p class="resource"><img src="sprites/resources/icon_stone.png" class="resource"> Stone <span class="data" id="resrcStone">0</span></p>
 	</div>
 	
-	<!--
-	<div class="resources">
-		<p style="border-bottom-style: solid">Resources</p>
-		<p class="resource">Food: </p>
-		<p class="resource">Wood: </p>
-		<p class="resource">Stone: </p>
+	<br />
+	
+	<div class="minigame_farm">
+		<p class="Title"><b>Farm</b></p>
+		<canvas tabindex='1' id="farm" width="500" height="300"></canvas>
+		<p><b><span id="farmUpdate">The cow sits patiently</span></b></p>
+		<p><b><span id="cowClick">0</span></b></p>
 	</div>
-	-->
-			
-		<script>
-			// Variable Initialization /////////////////////////////////////////////////
-			let clickCount = 0;
-			let numHitGoal = 0;
-			let goal = Math.floor(43.443 * Math.pow(Math.E, 1.0381 * numHitGoal)) + 7;
-			
-			let numClickers = 0;
-			
-			function initializeVars() {
-				document.getElementById("clicks").innerHTML = clickCount;
-				document.getElementById("clickGoal").innerHTML = goal;
-				document.getElementById("numClickers").innerHTML = numClickers;
-			}
-			
-			initializeVars();
-			
-			// UPDATE CALL /////////////////////////////////////////////////
-			
-			var updateClickCount = window.setInterval(function() {
-				// We want to update clickCount EVERY frame
-				document.getElementById("clicks").innerHTML = clickCount;
-				checkGoal();
-			}, 500);
+	
+	<br />
 		
-			// onclick Functions /////////////////////////////////////////////////
-			function manualIncrement() {
-				clickCount++;
-				document.getElementById("clicks").innerHTML = clickCount;
+		<script>
+		
+			// Useful General Functions /////////////////////////////////////////////////////////
+			function getRandomInt(max) {
+			  return Math.floor(Math.random() * max);
 			}
 			
-			// Goal code /////////////////////////////////////////////////
-			function updateGoal() {				
-				goal = Math.floor(43.443 * Math.pow(Math.E, 1.0381 * numHitGoal)) + 7;
+			// Canvas mouse click ///////////////////////////////////////////////////////////////
+			function getMousePosition(canvas, event) {
+				let rect = canvas.getBoundingClientRect();
+				let mouseX = event.clientX - rect.left;
+				let mouseY = event.clientY - rect.top;
+							
+				if(mouseX > x && mouseX < x + 50 && mouseY > y && mouseY > y - 50) {
+					clickedOnCow();
+				}
+			}
+		
+			canvas.addEventListener("mousedown", function(e)
+			{
+				getMousePosition(canvas, e);
+			});
+			
+			// Canvas Code //////////////////////////////////////////////////////////////////////
+			var canvas = document.getElementById("farm");
+			var ctx = canvas.getContext("2d");
+		
+			let x = canvas.width/2;
+			let y = canvas.height/2;
+			let dx = .5;
+			let dy = -.5;
+			let spd = 0;
+			
+			function draw() {
+				//ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = "#272c38";
+				ctx.fillRect(0, 0, 500, 300);
 				
-				// We want to update clickGoal ONLY when the condition is met, not EVERY frame
-				document.getElementById("clickGoal").innerHTML = goal;
-			}
-			
-			function checkGoal() {
-				if(clickCount >= goal)
-					{
-						numHitGoal++;
-						updateGoal();
+				drawCow();
+				
+				if(x + dx > canvas.width-50 || x + dx < 0) {
+					dx = -dx;
+				}
+				if(y + dy > canvas.height-50 || y + dy < 0) {
+					dy = -dy;
+				}
+				
+				x += dx*spd;
+				y += dy*spd;
+				
+				if(spd > 5) {
+					let chance = getRandomInt(750);
+					
+					if(chance < 4){
+					
+						// prevent cow from flying off canvas
+						if((x > 75 && x < canvas.width - 75) && (y > 75 && x < canvas.height - 75))
+							changeCowDir();
 					}
-			}
-			
-			// Buy Auto Clicker /////////////////////////////////////////////////
-			function buyClicker() {
-				numClickers++;
+				}
 				
-				// We want to update numClickers ONLY when the condition is met, not EVERY frame
-				document.getElementById("numClickers").innerHTML = numClickers;
+			}
+			setInterval(draw, 10);
+		
+			// Code regarding the Cow ///////////////////////////////////////////////////////////
+			var cow = new Image();
+			cow.src = "sprites/animals/icon_cow.png";
+			
+			let cowClickCount = 0;
+			let foodCount = 0;
+			
+			function drawCow() {
+				ctx.beginPath();
+				ctx.drawImage(cow, x, y, 50, 50);
+				ctx.fill();
+				ctx.closePath();
 			}
 			
-			// Auto Increment /////////////////////////////////////////////////
-			function autoIncrement() {
-				clickCount += numClickers;
+			// Function to change the cow's direction
+			function changeCowDir() {
+				dx = -dx;
+				dy = -dy;
 			}
 			
-			var autoClickAdder = window.setInterval(function() {
-				autoIncrement();
-			}, 500);
+			function clickedOnCow() {
+				spd++;
+				cowClickCount++;
+				incrementFood();
+				document.getElementById("cowClick").innerHTML = cowClickCount;
+				
+				switch(cowClickCount)
+				{
+					case 1:
+						document.getElementById("farmUpdate").innerHTML = "The cow didn't like that.";
+						break;
+						
+					case 5:
+						document.getElementById("farmUpdate").innerHTML = "The cow can now break your ankles.";
+						break;
+						
+					case 10:
+						document.getElementById("farmUpdate").innerHTML = "The cow moos in a taunting manner and smirks.";
+						break;
+				}
+			}
+			
+			// Increment Meat
+			function incrementFood() {
+				foodCount++;
+				document.getElementById("resrcFood").innerHTML = foodCount;
+			}
+			
+			// Code Regarding CLICKERS /////////////////////////////////////////////////
+		
+				// Variable Initialization /////////////////////////////////////////////////
+				let clickCount = 0;
+				let numHitGoal = 0;
+				let goal = Math.floor(43.443 * Math.pow(Math.E, 1.0381 * numHitGoal)) + 7;
+				
+				let numClickers = 0;
+				
+				function initializeVars() {
+					document.getElementById("clicks").innerHTML = clickCount;
+					document.getElementById("clickGoal").innerHTML = goal;
+					document.getElementById("numClickers").innerHTML = numClickers;
+				}
+				
+				initializeVars();
+				
+				// UPDATE CALL /////////////////////////////////////////////////
+				
+				var updateClickCount = window.setInterval(function() {
+					// We want to update clickCount EVERY frame
+					document.getElementById("clicks").innerHTML = clickCount;
+					checkGoal();
+				}, 500);
+			
+				// onclick Functions /////////////////////////////////////////////////
+				function manualIncrement() {
+					clickCount++;
+					document.getElementById("clicks").innerHTML = clickCount;
+				}
+				
+				// Goal code /////////////////////////////////////////////////
+				function updateGoal() {				
+					goal = Math.floor(43.443 * Math.pow(Math.E, 1.0381 * numHitGoal)) + 7;
+					
+					// We want to update clickGoal ONLY when the condition is met, not EVERY frame
+					document.getElementById("clickGoal").innerHTML = goal;
+				}
+				
+				function checkGoal() {
+					if(clickCount >= goal)
+						{
+							numHitGoal++;
+							updateGoal();
+						}
+				}
+				
+				// Buy Auto Clicker /////////////////////////////////////////////////
+				function buyClicker() {
+					numClickers++;
+					
+					// We want to update numClickers ONLY when the condition is met, not EVERY frame
+					document.getElementById("numClickers").innerHTML = numClickers;
+				}
+				
+				// Auto Increment /////////////////////////////////////////////////
+				function autoIncrement() {
+					clickCount += numClickers;
+				}
+				
+				var autoClickAdder = window.setInterval(function() {
+					autoIncrement();
+				}, 500);
 			
 		</script>
 			
