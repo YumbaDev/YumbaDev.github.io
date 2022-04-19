@@ -1,3 +1,7 @@
+
+* { padding: 0; margin: 0; }
+      canvas { background: #eee; display: block; margin: 0 auto; }
+
 :root {
 	--dkColor: #0F1422;
 	--Color: #272c38;
@@ -13,17 +17,6 @@
 	padding-left: 10px;
 	padding-right: 10px;
 }
-
-.resources {
-	background-color: var(--ltColor); 
-	width: 10%;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-
 
 .data { float:right }
 
@@ -53,4 +46,28 @@ p.Title {
 	white-space: pre;
 	border-bottom-style: solid; 
 	margin-bottom: 5px;
+}
+
+img.resource {
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+}
+
+div.resources {
+	background-color: var(--ltColor); 
+	width: 10%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+div.minigame {
+	background-color: var(--ltColor); 
+	width: 500px;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
 }
