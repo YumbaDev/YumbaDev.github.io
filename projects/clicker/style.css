@@ -72,7 +72,7 @@ div.minigameFarm {
 	padding-right: 20px;
 }
 
-div.minigame_forest {
+div.minigameForest {
 	background-color: var(--ltColor); 
 	width: 500px;
 	padding-top: 10px;
@@ -81,7 +81,7 @@ div.minigame_forest {
 	padding-right: 20px;
 }
 
-div.minigame_mine {
+div.minigameMine {
 	background-color: var(--ltColor); 
 	width: 500px;
 	padding-top: 10px;
