@@ -63,7 +63,25 @@ div.resources {
 	padding-right: 10px;
 }
 
-div.minigame {
+div.minigame_farm {
+	background-color: var(--ltColor); 
+	width: 500px;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+div.minigame_forest {
+	background-color: var(--ltColor); 
+	width: 500px;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+div.minigame_mine {
 	background-color: var(--ltColor); 
 	width: 500px;
 	padding-top: 10px;
