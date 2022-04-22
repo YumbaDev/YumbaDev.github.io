@@ -35,7 +35,7 @@
 	<br />
 	
 	<div class="resources">
-		<p class="Title"><b>Resources</b></p>
+		<p class="Title">Resources</p>
 		<p class="resource"><img src="sprites/resources/icon_meat.png" class="resource"> Food <span class="data" id="resrcFood">0</span></p>
 		<p class="resource"><img src="sprites/resources/icon_wood.png" class="resource"> Wood <span class="data" id="resrcWood">0</span></p>
 		<p class="resource"><img src="sprites/resources/icon_stone.png" class="resource"> Stone <span class="data" id="resrcStone">0</span></p>
@@ -43,147 +43,264 @@
 	
 	<br />
 	
-	<div class="minigameFarm">
+	<div class="minigame">
+		<div class="horizontal_layout">
+			
+			<label for="farm">Farm
+			<input type="radio" name="gamemode" value="farm" id="btn_farm" onclick="updateMinigame(0)">
+			</label>
+			
+			<label for="forest">Forest
+			<input type="radio" name="gamemode" value="forest" id="btn_forest" onclick="updateMinigame(1)">
+			</label>
+			
+			<label for="mine">Mine
+			<input type="radio" name="gamemode" value="mine" id="btn_mine" onclick="updateMinigame(2)">
+			</label>
+		</div>
+		<!---
 		<p class="Title"><b>Farm</b></p>
 		<canvas tabindex='1' id="farm" width="500" height="300"></canvas>
 		<p><b><span id="farmUpdate">The cow sits patiently</span></b></p>
 		<p><b><span id="cowClick">0</span></b></p>
+		--->
+		<canvas tabindex='1' id="minigame" width="500" height="300"></canvas>
+		<p><b><span id="minigameFeedback"></span></b></p>
+		<p><b><span id="cowClick"></span></b></p>
 	</div>
-
-	<br />
 	
-	<div class="minigameForest">
-		<p class="Title"><b>Farm</b></p>
-	</div>
-
-	<br />
-	
-	<div class="minigameMine">
-		<p class="Title"><b>Mine</b></p>
-	</div>
-
-		<script>
 		
+		<script>
 			// Useful General Functions ////////////////////////////////////////////////////////
 			// Get a random integer from range 0, max
 			function getRandomInt(max) {
 			  return Math.floor(Math.random() * max);
 			}
 			
-			// Canvas Code for FARM /////////////////////////////////////////////////////////////////////
-			var canvas_farm = document.getElementById("farm");
-			var ctx_farm = canvas_farm.getContext("2d");
-		
-			let x = canvas_farm.width/2;
-			let y = canvas_farm.height/2;
-			let dx = .5;
-			let dy = -.5;
-			let spd = 0;
+			var canvas = document.getElementById("minigame");
+			var ctx = canvas.getContext("2d");
+			var currentGame = -1;
+			
+			// By default, no radio buttons should be checked, so set canvas to empty
+			if(!document.getElementById('btn_farm').checked &&
+			   !document.getElementById('btn_forest').checked &&
+			   !document.getElementById('btn_mine').checked){
+			   scr_canvasEmpty();
+			}
+			
+			function updateMinigame(game) {
+				currentGame = game;
+				switch (game) {
+					
+					// farm
+					case 0:
+						scr_canvasFarm();
+						break;
 				
+					// forest
+					case 1:
+						scr_canvasForest();
+						break;
+					
+					// mine
+					case 2:
+						scr_canvasMine();
+						break;
+					
+					default:
+						scr_canvasEmpty();
+						break;
+				}				
+			}
+				
+			function scr_canvasEmpty() {
+				document.getElementById("minigameFeedback").innerHTML = "";
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = "#272c38";
+				ctx.fillRect(0, 0, 500, 300);
+				ctx.font = "16px Verdana";
+				ctx.textAlign = 'center';
+				ctx.fillStyle = "#cfd0d3";
+				ctx.fillText( "Choose a minigame to continue", canvas.width/2, canvas.height/2);
+			}
+			
+			function scr_canvasForest() {
+				document.getElementById("minigameFeedback").innerHTML = "";
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = "#272c38";
+				ctx.fillRect(0, 0, 500, 300);
+				ctx.font = "16px Verdana";
+				ctx.textAlign = 'center';
+				ctx.fillStyle = "#cfd0d3";
+				ctx.fillText( "This minigame is still being worked on, choose another", canvas.width/2, canvas.height/2);
+			}
+			
+			function scr_canvasMine() {
+				document.getElementById("minigameFeedback").innerHTML = "";
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = "#272c38";
+				ctx.fillRect(0, 0, 500, 300);
+				ctx.font = "16px Verdana";
+				ctx.textAlign = 'center';
+				ctx.fillStyle = "#cfd0d3";
+				ctx.fillText( "This minigame is still being worked on, choose another", canvas.width/2, canvas.height/2);
+			}
+			
 			function draw() {
-				//ctx_farm.clearRect(0, 0, canvas_farm.width, canvas_farm.height);
-				ctx_farm.fillStyle = "#272c38";
-				ctx_farm.fillRect(0, 0, 500, 300);
-				
-				drawCow();
-				
-				if(x + dx > canvas_farm.width-50 || x + dx < 0) {
-					dx = -dx;
+				switch(currentGame){
+					// farm
+					case 0:
+						drawCanvasFarm();
+						break;
+					
+					// forest
+					case 1:
+						drawCanvasForest();
+						break;
+						
+					// 
+					case 2:
+						drawCanvasMine();
+						break;
 				}
-				if(y + dy > canvas_farm.height-50 || y + dy < 0) {
-					dy = -dy;
-				}
+			}
+			setInterval(draw, 10);
+		
+			// BUG ***
+			// bug where if you change between minigames while cow is moving, clickoncow() will increase foodcount +1 times every time game changes
+			let cowClickCount = 0;
+			let foodCount = 0;
 				
-				x += dx*spd;
-				y += dy*spd;
+			// START FARM MINIGAME CODE //======================================================================================================================
 				
-				if(spd > 5) {
+			// Cow Variables, will be in the open to be remembered/saved //////
+			let cow_x = canvas.width/2;
+			let cow_y = canvas.height/2;
+			let cow_dx = .5;
+			let cow_dy = -.5;
+			let cow_spd = 0;
+			///////////////////////////////////////////////////////////////////
+			
+			// draws the cursed cow
+			function drawCow(cow, cow_x, cow_y) {
+				ctx.beginPath();
+				ctx.drawImage(cow, cow_x, cow_y, 50, 50);
+				ctx.fill();
+				ctx.closePath();
+			}
+			
+			// determines whether or not cow will change direction
+			function cowGymnistics(cow_x, cow_y, cow_spd){
+				if(cow_spd > 5) {
 					let chance = getRandomInt(750);
 					
 					if(chance < 4){
 					
-						// prevent cow from flying off canvas_farm
-						if((x > 75 && x < canvas_farm.width - 75) && (y > 75 && x < canvas_farm.height - 75))
+						// prevent cow from flying off canvas
+						if((cow_x > 75 && cow_x < canvas.width - 75) && (cow_y > 75 && cow_x < canvas.height - 75))
 							changeCowDir();
 					}
-				}
-				
-			}
-			setInterval(draw, 10);
-			
-			// Code to detect where mouse is click in canvas_farm
-			function getMousePosition(canvas_farm, event) {
-				let rect = canvas_farm.getBoundingClientRect();
-				let mouseX = event.clientX - rect.left;
-				let mouseY = event.clientY - rect.top;
-							
-				if(mouseX > x && mouseX < x + 50 && mouseY > y && mouseY > y - 50) {
-					clickedOnCow();
-				}
-			}
-		
-			canvas_farm.addEventListener("mousedown", function(e)
-			{
-				getMousePosition(canvas_farm, e);
-			});
-		
-			// Code regarding the Cow ///////////////////////////////////////////////////////////
-			let cowClickCount = 0;
-			let foodCount = 0;
-			
-			var cow = new Image();
-			cow.src = "sprites/animals/icon_cow.png";
-			
-			function drawCow() {
-				ctx_farm.beginPath();
-				ctx_farm.drawImage(cow, x, y, 50, 50);
-				ctx_farm.fill();
-				ctx_farm.closePath();
-			}
-			
-			function clickedOnCow() {
-				spd++;
-				cowClickCount++;
-				incrementFood();
-				document.getElementById("cowClick").innerHTML = cowClickCount;
-				
-				switch(cowClickCount)
-				{
-					case 1:
-						document.getElementById("farmUpdate").innerHTML = "The cow didn't like that.";
-						break;
-						
-					case 5:
-						document.getElementById("farmUpdate").innerHTML = "The cow can now break your ankles.";
-						break;
-						
-					case 10:
-						document.getElementById("farmUpdate").innerHTML = "The cow moos in a taunting manner and smirks.";
-						break;
 				}
 			}
 			
 			// Function to change the cow's direction
 			function changeCowDir() {
-				dx = -dx;
-				dy = -dy;
+				cow_dx = -cow_dx;
+				cow_dy = -cow_dy;
 			}
 			
-			// Increment Meat
-			function incrementFood() {
-				foodCount++;
-				document.getElementById("resrcFood").innerHTML = foodCount;
+			function drawCanvasFarm() {
+				ctx.fillStyle = "#272c38";
+				ctx.fillRect(0, 0, 500, 300);
+				
+				var cow = new Image();
+				cow.src = "sprites/animals/icon_cow.png";
+				
+				if(cow_x + cow_dx > canvas.width-50 || cow_x + cow_dx < 0) {
+					cow_dx = -cow_dx;
+				}
+				if(cow_y + cow_dy > canvas.height-50 || cow_y + cow_dy < 0) {
+					cow_dy = -cow_dy;
+				}
+				cow_x += cow_dx*cow_spd;
+				cow_y += cow_dy*cow_spd;
+				
+				drawCow(cow, cow_x, cow_y);
+				cowGymnistics(cow_x, cow_y, cow_spd);
 			}
 			
-			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			function scr_canvasFarm() {
+				// Code to detect where mouse is clicked in canvas
+				
+				function getMousePosition(canvas, event) {
+					let rect = canvas.getBoundingClientRect();
+					let mouseX = event.clientX - rect.left;
+					let mouseY = event.clientY - rect.top;
+								
+					// You have clicked on cow if conditions are met
+					if(mouseX > cow_x && mouseX < cow_x + 50 && mouseY > cow_y && mouseY > cow_y - 50) {
+						clickedOnCow();
+					}
+				}
 			
-			// Canvas Code for FOREST /////////////////////////////////////////////////////////////////////
-			//var canvas_forest = document.getElementById("forest");
-			//var ctx_forest = canvas_forest.getContext("2d");
+				canvas.addEventListener("mousedown", function(e)
+				{
+					getMousePosition(canvas, e);
+				});
+				
+				// Cow code commences
+				
+				function clickedOnCow() {
+				
+					// Cow physically can not surpass the given speed
+					if(cow_spd < 50){
+						cow_spd++;
+					}
+						
+					cowClickCount++;
+					incrementFood();
+					
+					switch(cowClickCount)
+					{
+						case 1:
+							document.getElementById("minigameFeedback").innerHTML = "The cow didn't like that.";
+							break;
+							
+						case 5:
+							document.getElementById("minigameFeedback").innerHTML = "The cow can now break your ankles.";
+							break;
+							
+						case 10:
+							document.getElementById("minigameFeedback").innerHTML = "The cow moos in a taunting manner and smirks.";
+							break;
+					}
+				}
+				
+				// Increment Meat
+				function incrementFood() {
+					foodCount++;
+					document.getElementById("resrcFood").innerHTML = foodCount;
+				}
+				
+			}
+			// END FARM MINIGAME CODE //======================================================================================================================
 			
+			// START FOREST MINIGAME CODE //======================================================================================================================
+			function drawCanvasForest() {
+				// come up with cool game idea
+			}
+			// END FOREST MINIGAME CODE //======================================================================================================================
+			
+			// START MINE MINIGAME CODE //======================================================================================================================
+			function drawCanvasMine() {
+				// come up with cool game idea
+			}
+			// END MINE MINIGAME CODE //======================================================================================================================
+			
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			// "CLICKER" Portion mainly for early testing, will be removed
 			// Code regarding the "CLICKER" portion ////////////////////////////////////
-		
 			// Variable Initialization /////////////////////////////////////////////////
 			let clickCount = 0;
 			let numHitGoal = 0;

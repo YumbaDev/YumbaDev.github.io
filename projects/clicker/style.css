@@ -46,6 +46,13 @@ p.Title {
 	white-space: pre;
 	border-bottom-style: solid; 
 	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+p.ButtonName {
+	margin: 0;
+	white-space: pre;
+	margin-bottom: 5px;
 }
 
 img.resource {
@@ -63,7 +70,23 @@ div.resources {
 	padding-right: 10px;
 }
 
-div.minigameFarm {
+div.horizontal_layout {
+	display: flex;
+	justify-content: space-between;
+	margin: 0 auto;
+	clear: none;
+	padding-left: 10%;
+	padding-right: 10%;
+	padding-bottom: 10px;
+}
+
+label {
+	color: var(--Text);
+	font-size: 16px;
+	font-weight: bold;
+}
+
+div.minigame {
 	background-color: var(--ltColor); 
 	width: 500px;
 	padding-top: 10px;
@@ -72,7 +95,7 @@ div.minigameFarm {
 	padding-right: 20px;
 }
 
-div.minigameForest {
+.minigame_forest {
 	background-color: var(--ltColor); 
 	width: 500px;
 	padding-top: 10px;
@@ -81,7 +104,7 @@ div.minigameForest {
 	padding-right: 20px;
 }
 
-div.minigameMine {
+.minigame_mine {
 	background-color: var(--ltColor); 
 	width: 500px;
 	padding-top: 10px;
