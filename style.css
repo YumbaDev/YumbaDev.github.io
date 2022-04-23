@@ -39,7 +39,7 @@ nav img{
 	font-size: 13px;
 }
 
-/*	Underlines HOME, ABOUT, BLOG, CONTACT when hovered after	*/
+/*	Underlines HOME, ABOUT,CONTACT when hovered after	*/
 .nav-links ul li::after{
 	content: '';
 	width: 0%;
@@ -130,7 +130,9 @@ nav .fas{
 	margin: auto;
 	text-align: center;
 	padding-top: 100px;
-	background: linear-gradient(45deg, #272c38 5%, #0F1422);
+	/* background: #272c38;	/* #D3D3D3; (white), #D3D3D3; (purple) */
+	
+	background: linear-gradient(135deg, #272c38, #0F1422);
 }
 h1{
 	font-size: 24px;	/* 36px	*/
