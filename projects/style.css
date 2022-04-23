@@ -90,3 +90,18 @@ a:visited {
 	color: #fff;	
 	background-color: var(--Color);
 }
+
+nav{
+	display: flex;
+	
+	justify-content: space-between;
+	align-items: center;
+}
+nav img{
+	width: 100px;
+	
+	padding: 2% 2%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
