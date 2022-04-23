@@ -16,21 +16,24 @@ html {
 }
 
 div.projectList {
-	width: 25%;
+	display:inline-block;
+	
 	position: absolute;
-    	top: 50%;
-    	left: 50%;
-    	margin-right: -50%;
-    	transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
 }
 
 body { 
 	/*background-color: var(--dkColor);*/
 	font-family: 'Helvetica', sans-serif;	
-	padding-top: 25px;
-	padding-left: 50px;
 	font-weight: bold;
-	background: linear-gradient(45deg, var(--dkColor) 10%, #000000) no-repeat;
+	background: linear-gradient(135deg, var(--dkColor) 10%, #000000) no-repeat;
+	
+	/* bubble */
+	margin: 0;
+    overflow: hidden;
 }
 
 h1 { 
@@ -48,6 +51,22 @@ p {
 	text-decoration: none;
 	font-size: 24px;
 	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+p.wip {
+	color: var(--Text); 
+	margin: 10px;
+	text-decoration: none;
+	font-size: 16px;
+	
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	
+	padding-right: 25px;
+	padding-bottom: 25px;
 }
 
 a {
