@@ -30,7 +30,7 @@ body {
 	padding-top: 25px;
 	padding-left: 50px;
 	font-weight: bold;
-	background: linear-gradient(90deg, var(--dkColor) 10%, #000000) no-repeat;
+	background: linear-gradient(45deg, var(--dkColor) 10%, #000000) no-repeat;
 }
 
 h1 { 
