@@ -1,0 +1,40 @@
+:root {
+	--dkColor: #0F1422;
+	--Color: #272c38;
+	--ltColor: #3f434e;
+	--Text: #cfd0d3;
+}
+
+body { 
+	/*background-color: var(--dkColor);*/
+	font-family: 'Helvetica', sans-serif;	
+	font-weight: bold;
+	background: linear-gradient(135deg, var(--dkColor) 10%, #000000) no-repeat;
+	
+	/* bubble */
+	margin: 0;
+	
+
+    overflow: hidden;
+	
+	display: flex;
+
+	justify-content: center;
+
+	align-items: center;
+
+}
+
+html, body {
+  height: 100%;
+}
+
+.top {
+	display:inline-block;
+	
+	padding-top: 25px;
+	position: absolute;
+    top: 0;
+    margin-left:auto;
+	margin-right:auto;
+}

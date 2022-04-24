@@ -2,17 +2,17 @@
 <html>
 	<head>
 		<title>Map Generator</title>
-	
+		<link rel="stylesheet" href="style.css">
 		<script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
 		
 		<script src="sketch.js"></script>
 		<script src="cell.js"></script>
 	</head>
 	
-	<body style="background-color:#0F1422">
-			<h1 style="color:#cfd0d3;"> Map Generator </h1>
-						
-			<input id="resetButton" type="button" value="Reset" onclick="doReset()">
+	<body>
+			<div class="top">		
+				<input class="btn" id="resetButton" type="button" value="Regenerate Map" onclick="doReset()">
+			</div>
 			
 			<script>
 				function doReset(){
