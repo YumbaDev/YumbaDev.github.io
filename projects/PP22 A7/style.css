@@ -1,0 +1,23 @@
+body { 
+	/*background-color: var(--dkColor);*/
+	font-family: 'Helvetica', sans-serif;	
+	font-weight: bold;
+	background: linear-gradient(135deg, var(--dkColor) 10%, #000000) no-repeat;
+	
+	/* bubble */
+	margin: 0;
+	
+
+    overflow: hidden;
+	
+	display: flex;
+
+	justify-content: center;
+
+	align-items: center;
+
+}
+
+html, body {
+  height: 100%;
+}

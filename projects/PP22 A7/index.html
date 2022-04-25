@@ -1,0 +1,1017 @@
+<head>
+	<title>PP22 A7</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body style="background: linear-gradient(135deg, #4f342e 10%, #261916) no-repeat">
+<br>
+<canvas id="myCanvas" width="500" height="500" style="background: radial-gradient(#9e6d5f, #36241f); border:10px solid #000000;"></canvas>
+
+<div style="float: left; margin: 25px;">
+<fieldset style="border-color: #fff; color: #fff; ">
+<legend style="font-size: 24px;"> Controls </legend>
+<label style="font-size: 24px;">Arrow Keys to move</label> <br>
+<label style="font-size: 24px;">CTRL to shoot</label>
+</fieldset>
+</div>
+
+<script type="text/javascript">
+
+canvas = document.getElementById("myCanvas");
+const WIDTH = canvas.width;
+const HEIGHT = canvas.height;
+const tileSize = 50;
+
+// Class that will be holding all images
+function ImageLibrary() {
+	
+	// Player sprites ////////////////////////////////////////////////////////////////////////////
+	this.player_image = new Image();
+	this.player_image.src = "sprites/player/player_image.png";
+		
+	let numSubimages = 10;
+	// Load the player_right_sprites array
+	this.player_right_sprites = [];
+	for(let i = 0; i < numSubimages; i++) {
+		this.player_right_sprites[i] = new Image();
+		this.player_right_sprites[i].src = "sprites/player/player_right/player_right_" + i + ".png";
+	}
+	
+	// Load the player_up_sprites array
+	this.player_up_sprites = [];
+	for(let i = 0; i < numSubimages; i++) {
+		this.player_up_sprites[i] = new Image();
+		this.player_up_sprites[i].src = "sprites/player/player_up/player_up_" + i + ".png";
+	}
+		
+	// Load the player_left_sprites array
+	this.player_left_sprites = [];
+	for(let i = 0; i < numSubimages; i++) {
+		this.player_left_sprites[i] = new Image();
+		this.player_left_sprites[i].src = "sprites/player/player_left/player_left_" + i + ".png";
+	}
+	
+	// Load the player_down_sprites array
+	this.player_down_sprites = [];
+	for(let i = 0; i < numSubimages; i++) {
+		this.player_down_sprites[i] = new Image();
+		this.player_down_sprites[i].src = "sprites/player/player_down/player_down_" + i + ".png";
+	}
+	// ========================================================================================= //
+	
+	// Brick sprites //////////////////////////////////////////////////////////////////////////////
+	this.brick_image = new Image();
+	this.brick_image.src = "sprites/brick_image.png";
+	
+	this.rock_image = new Image();
+	this.rock_image.src = "sprites/rock_image.png";
+	
+	this.poop_image = new Image();
+	this.poop_image.src = "sprites/poop_image.png";
+	
+	this.mushroom_image = new Image();
+	this.mushroom_image.src = "sprites/mushroom_image.png";
+	
+	this.skull_image = new Image();
+	this.skull_image.src = "sprites/skull_image.png";
+	// ========================================================================================= //
+	
+	// Tear sprites ///////////////////////////////////////////////////////////////////////////////
+	this.tear_image = new Image();
+	this.tear_image.src = "sprites/tear_image.png";
+	// ========================================================================================= //
+	
+	// Pot sprites ////////////////////////////////////////////////////////////////////////////////
+	this.pot_image = new Image();
+	this.pot_image.src = "sprites/pot_image.png";
+	
+	this.broken_pot_image = new Image();
+	this.broken_pot_image.src = "sprites/broken_pot_image.png";
+	// ========================================================================================= //
+}	
+
+const Img = new ImageLibrary();
+		
+class Sprite
+{
+	constructor(x1, y1, w1, h1, image_url)
+	{
+		this.x = x1;
+		this.y = y1;
+		this.w = w1;
+		this.h = h1;
+		this.image = new Image();
+		this.image.src = image_url;
+	}
+	
+	isPlayer(){
+		return false;
+	}
+	
+	isBrick() {
+		return false;
+	}
+	
+	isProjectile() {
+		return false;
+	}
+	
+	isPot() {
+		return false;
+	}
+}
+
+class Projectile extends Sprite
+{
+	constructor(x, y, w, h, image_url)
+	{
+		super(x, y, w, h, image_url);
+		
+		this.spd = 12;
+		this.hspd = 0;
+		this.vspd = 0;
+		
+		this.hasCollided = false;
+	}
+	
+	setDirection(dir) {
+		
+		switch(dir) {
+			case 0:
+				this.hspd = this.spd;
+				this.vspd = 0;
+				break;
+		
+			case 1:
+				this.hspd = 0;
+				this.vspd = -this.spd;
+				break;
+				
+			case 2:
+				this.hspd = -this.spd;
+				this.vspd = 0;
+				break;
+				
+			case 3:
+				this.hspd = 0;
+				this.vspd = this.spd;
+				break;
+		}
+	}
+	
+	collided() {
+		this.hasCollided = true;
+	}
+	
+	update() //sit_still
+	{
+		this.left_side = this.x;
+		this.right_side = this.x + this.w;
+		this.top_side = this.y;
+		this.bottom_side = this.y + this.h;
+		
+		this.x += this.hspd;
+		this.y += this.vspd;
+		
+		let ret = !this.hasCollided;
+		
+		return ret;
+	}
+
+	isProjectile() {
+		return true;
+	}
+}
+
+
+class Brick extends Sprite
+{
+	constructor(x, y, w, h, image_url)
+	{
+		super(x, y, w, h, image_url);
+	}
+	
+	update() //sit_still
+	{
+		this.left_side = this.x;
+		this.right_side = this.x + this.w;
+		this.top_side = this.y;
+		this.bottom_side = this.y + this.h;
+		
+		return true;
+	}
+	
+	isBrick() {
+		return true;
+	}
+}
+
+
+
+
+class Pot extends Sprite
+{
+	constructor(x, y, w, h, image_url)
+	{
+		super(x, y, w, h, image_url);
+		
+		this.broken = false;
+		this.countdown = 30;
+		this.spd = 8;
+		this.hspd = 0;
+		this.vspd = 0;
+		this.direction = 0;;
+		this.isSliding = false;
+		this.dontDestroy = true;
+	}
+	
+	update() //sit_still
+	{
+		this.left_side = this.x;
+		this.right_side = this.x + this.w;
+		this.top_side = this.y;
+		this.bottom_side = this.y + this.h;
+		
+		this.x += this.hspd;
+		this.y += this.vspd;
+		
+		if(this.broken) {
+			this.countdown--;
+		}
+		
+		if(this.countdown <= 0) {
+			this.dontDestroy = false;
+		}
+		
+		return this.dontDestroy;
+	}
+	
+	slide(dir) {
+		if(!this.broken) {
+			if(!this.isSliding) {
+				this.direction = dir;
+			}
+			
+			this.isSliding = true;
+			
+			switch(this.direction){
+				//move right
+				case 0:
+					this.hspd = this.spd;
+					this.vspd = 0;
+					break;
+					
+				//move up
+				case 1:
+					this.hspd = 0;
+					this.vspd = -this.spd;
+					break;
+					
+				//move left
+				case 2:
+					this.hspd = -this.spd;
+					this.vspd = 0;
+					break;
+					
+				//move down
+				case 3:
+					this.hspd = 0;
+					this.vspd = this.spd;
+					break;
+			}
+		}
+	}
+	
+	brickCollision() {
+		this.broken = true;
+		this.spd = 0;
+		this.hspd = 0;
+		this.vspd = 0;
+		this.image.src = Img.broken_pot_image.src;
+	}
+	
+	tearCollision() {
+		this.broken = true;
+		this.spd = 0;
+		this.hspd = 0;
+		this.vspd = 0;
+		this.image.src = Img.broken_pot_image.src;
+	}
+	
+	isPot() {
+		return true;
+	}
+}
+
+
+
+class Player extends Sprite
+{
+	constructor(x, y, w, h, image_url)
+	{
+		super(x, y, w, h, image_url);		
+		
+		this.spd = 5;
+		
+		this.hspd = 0;
+		this.vspd = 0;
+		
+		this.px = this.x;
+		this.py = this.y;
+		
+		// player initially facing down
+		this.direction = 3;
+		
+		this.subimage = 0;
+	}
+
+	update() //set_destination formerly
+	{
+		this.left_side = this.x;
+		this.right_side = this.x + this.w;
+		this.top_side = this.y;
+		this.bottom_side = this.y + this.h;
+		
+		return true;
+	}
+	
+	setSprite() {
+		if(this.subimage == 10) { this.subimage = 0; }
+		
+		switch(this.direction) {
+			case 0:
+				this.image.src = Img.player_right_sprites[this.subimage].src;
+				break;
+				
+			case 1:
+				this.image.src = Img.player_up_sprites[this.subimage].src;
+				break;
+				
+			case 2:
+				this.image.src = Img.player_left_sprites[this.subimage].src;
+				break;
+				
+			case 3:
+				this.image.src = Img.player_down_sprites[this.subimage].src;
+				break;
+		}
+	}
+	
+	isIdle() {
+		this.subimage = 0;
+	}
+	
+	moveRight() {
+			this.x += this.spd;
+			this.setDirection(0);
+			this.subimage++;
+			this.setSprite();
+	}
+	
+	moveUp() {
+			this.y -= this.spd;
+			this.setDirection(1);
+			this.subimage++;
+			this.setSprite();
+	}
+	
+	moveLeft() {
+			this.x -= this.spd;
+			this.setDirection(2);
+			this.subimage++;
+			this.setSprite();
+	}
+	
+	moveDown() {
+			this.y += this.spd;
+			this.setDirection(3);
+			this.subimage++;
+			this.setSprite();
+	}
+	
+	setDirection(dir) {
+		this.direction = dir;
+	}
+	
+	getDirection() {
+		return this.direction;
+	}
+	
+	getOutOfSprite(b) {
+		let rightCollision = (this.x + this.w >= b.x && this.px < b.x);
+		let leftCollision = (this.x <= b.x + b.w && this.px >= b.x + b.w);
+		let bottomCollision = (this.y + this.h >= b.y && this.py < b.y);
+		let topCollision = (this.y <= b.y + b.h && this.py >= b.y + b.h);
+				
+		if(rightCollision) {
+			this.x = this.px;
+		}
+		
+		if(leftCollision) {
+			this.x = this.px;
+		}
+		
+		if(topCollision) {
+			this.y = this.py;
+		}
+		
+		if(bottomCollision) {
+			this.y = this.py;
+		}
+	}
+	
+	savePrevLocation() {
+		this.px = this.x;
+		this.py = this.y;
+	}
+	
+	isPlayer() {
+		return true;
+	}
+}
+
+
+
+
+class Model
+{
+	constructor()
+	{
+		this.sprites = [];
+		
+		// Player's depth must be infront of everything else
+		this.player = new Player(200, 200, 50, 60, Img.player_image.src);
+		this.sprites.push(this.player);
+		
+		this.fillWalls();
+		this.fillRooms();
+		
+	}
+	
+	fillWalls() {
+		for(let currRoom = 0; currRoom < this.numRooms(); currRoom++)
+		{
+			// top side wall
+			for(let i = 0; i < 10; i++){
+				let valid = true;
+				
+				switch(currRoom){
+					case 0:
+						this.sprites.push(new Brick(i * tileSize, 0, 50, 50, Img.brick_image.src));
+						break;
+						
+					case 1:
+						this.sprites.push(new Brick(i * tileSize + 500, 0, 50, 50, Img.brick_image.src));
+						break;
+						
+					case 2:
+						if(i == 3 || i == 4 || i == 5 || i == 6) {
+							valid = false;
+						}
+							
+						if(valid == true)
+							this.sprites.push(new Brick(i * tileSize + 500, 500, 50, 50, Img.brick_image.src));
+						break;
+					
+					case 3:
+						this.sprites.push(new Brick(i * tileSize + 1000, 500, 50, 50, Img.brick_image.src));
+						break;
+				}
+			}
+			
+			// left side wall
+			for(let i = 0; i < 10; i++){
+				let valid = true;
+				
+				switch(currRoom){
+					case 0:
+						this.sprites.push(new Brick(0, i * tileSize, 50, 50, Img.brick_image.src));
+						break;
+						
+					case 1:
+						if(i == 3 || i == 4 || i == 5 || i == 6) {
+							valid = false;
+						}
+							
+						if(valid == true)
+							this.sprites.push(new Brick(500, i * tileSize, 50, 50, Img.brick_image.src));
+						break;
+						
+					case 2:
+						this.sprites.push(new Brick(500, i * tileSize + 500, 50, 50, Img.brick_image.src));
+						break;
+					
+					case 3:
+						if(i == 3 || i == 4 || i == 5 || i == 6) {
+							valid = false;
+						}
+							
+						if(valid == true)
+							this.sprites.push(new Brick(1000, i * tileSize + 500, 50, 50, Img.brick_image.src));
+						break;
+				}
+			}
+			
+			// bottom side wall
+			for(let i = 0; i < 10; i++){
+				let valid = true;
+				
+				switch(currRoom){
+					case 0:
+						this.sprites.push(new Brick(i * tileSize, 9*tileSize, 50, 50, Img.brick_image.src));
+						break;
+						
+					case 1:
+						if(i == 3 || i == 4 || i == 5 || i == 6) {
+							valid = false;
+						}
+							
+						if(valid == true)
+							this.sprites.push(new Brick(i * tileSize+500, 9*tileSize, 50, 50, Img.brick_image.src));
+						break;
+						
+					case 2:
+						this.sprites.push(new Brick(i * tileSize+500, 9*tileSize + 500, 50, 50, Img.brick_image.src));
+						break;
+					
+					case 3:
+						this.sprites.push(new Brick(i * tileSize+1000, 9*tileSize + 500, 50, 50, Img.brick_image.src));
+						break;
+				}
+			}
+			
+			// right side wall
+			for(let i = 0; i < 10; i++){
+				let valid = true;
+				switch(currRoom){
+					case 0:
+						if(i == 3 || i == 4 || i == 5 || i == 6) {
+							valid = false;
+						}
+						
+						if(valid == true)
+							this.sprites.push(new Brick(9*tileSize, i * tileSize, 50, 50, Img.brick_image.src));
+						break;
+						
+					case 1:
+						this.sprites.push(new Brick(9*tileSize+500, i * tileSize, 50, 50, Img.brick_image.src));
+						break;
+						
+					case 2:
+						if(i == 3 || i == 4 || i == 5 || i == 6) {
+							valid = false;
+						}
+						
+						if(valid == true)
+							this.sprites.push(new Brick(9*tileSize+500, i * tileSize + 500, 50, 50, Img.brick_image.src));
+						break;
+					
+					case 3:
+						this.sprites.push(new Brick(9*tileSize+1000, i * tileSize + 500, 50, 50, Img.brick_image.src));
+						break;
+				}
+			}
+		}
+	}
+	
+	fillRooms() {
+		// first room objects (brick type)
+		this.placeObject("Poop", 1, 1, 1);
+		this.placeObject("Skull", 1, 8, 1);
+		this.placeObject("Mushroom", 1, 1, 7);
+		this.placeObject("Mushroom", 1, 1, 8);
+		this.placeObject("Mushroom", 1, 2, 8);
+		this.placeObject("Rock", 1, 6, 8);
+		this.placeObject("Rock", 1, 7, 8);
+		this.placeObject("Rock", 1, 8, 8);
+		// (pot type)
+		this.placeObject("Pot", 1, 5, 2);
+		this.placeObject("Pot", 1, 2, 4);
+		this.placeObject("Pot", 1, 8, 4);
+		this.placeObject("Pot", 1, 4, 7);
+		
+		// second room objects (brick type)
+		this.placeObject("Rock", 2, 3, 1);
+		this.placeObject("Rock", 2, 3, 2);
+		this.placeObject("Rock", 2, 4, 1);
+		this.placeObject("Rock", 2, 4, 2);
+		this.placeObject("Rock", 2, 7, 5);
+		this.placeObject("Rock", 2, 7, 6);
+		this.placeObject("Rock", 2, 8, 5);
+		this.placeObject("Rock", 2, 8, 6);
+		this.placeObject("Mushroom", 2, 7, 1);
+		this.placeObject("Mushroom", 2, 8, 1);
+		this.placeObject("Mushroom", 2, 8, 2);
+		this.placeObject("Skull", 2, 7, 2);
+		// (pot type)
+		this.placeObject("Pot", 2, 4, 5);
+	
+		// third room objects (brick type)
+		this.placeObject("Rock", 3, 1, 1);
+		this.placeObject("Rock", 3, 1, 2);
+		this.placeObject("Rock", 3, 8, 7);
+		this.placeObject("Rock", 3, 7, 8);
+		this.placeObject("Rock", 3, 8, 8);
+		this.placeObject("Skull", 3, 8, 1);
+		this.placeObject("Mushroom", 3, 1, 7);
+		this.placeObject("Mushroom", 3, 1, 8);
+		this.placeObject("Mushroom", 3, 2, 8);
+		// (pot type)
+		this.placeObject("Pot", 3, 3, 4);
+		this.placeObject("Pot", 3, 6, 3);
+		this.placeObject("Pot", 3, 7, 6);
+		
+		// fourth room objects (brick type)
+		for(let i = 1; i < 9; i++)
+			this.placeObject("Rock", 4, i, 1);
+		for(let i = 1; i < 9; i++)
+			this.placeObject("Rock", 4, i, 8);
+		this.placeObject("Poop", 4, 4, 4);
+		this.placeObject("Poop", 4, 4, 5);
+		this.placeObject("Poop", 4, 5, 4);
+		this.placeObject("Poop", 4, 5, 5);
+	}
+	
+	// Helper method to place objects in rooms
+	placeObject(type, room, x, y) {
+		let xoffset = 0;
+		let yoffset = 0;
+		
+		switch(room) {
+			case 1:
+				xoffset = 0;
+				yoffset = 0;
+				break;
+				
+			case 2:
+				xoffset = 500;
+				yoffset = 0;
+				break;
+				
+			case 3:
+				xoffset = 500;
+				yoffset = 500;
+				break;
+				
+			case 4:
+				xoffset = 1000;
+				yoffset = 500;
+				break;
+		}
+	
+		switch(type) {
+			case "Brick":
+				this.sprites.push(new Brick(x * tileSize + xoffset, y * tileSize + yoffset, 50, 50, Img.brick_image.src));
+				break;
+				
+			case "Poop":
+				this.sprites.push(new Brick(x * tileSize + xoffset, y * tileSize + yoffset, 50, 50, Img.poop_image.src));
+				break;
+				
+			case "Rock":
+				this.sprites.push(new Brick(x * tileSize + xoffset, y * tileSize + yoffset, 50, 50, Img.rock_image.src));
+				break;
+			
+			case "Mushroom":
+				this.sprites.push(new Brick(x * tileSize + xoffset, y * tileSize + yoffset, 50, 50, Img.mushroom_image.src));
+				break;
+				
+			case "Skull":
+				this.sprites.push(new Brick(x * tileSize + xoffset, y * tileSize + yoffset, 50, 50, Img.skull_image.src));
+				break;
+		
+			case "Pot":
+				this.sprites.push(new Pot(x * tileSize + xoffset, y * tileSize + yoffset, 50, 50, Img.pot_image.src));
+				break;
+		}
+	}
+	
+	numRooms() {
+		return 4;
+	}
+
+	addTear() {
+		let tearSize = 20;
+		let tearDir = this.player.getDirection();
+		let tearX = 0;
+		let tearY = 0;
+		
+		switch(tearDir) {
+			case 0:
+				tearX = this.player.x + this.player.w/2;
+				tearY = this.player.y + (this.player.h / 2) - (tearSize / 2);
+				break;
+				
+			case 1:
+				tearX = this.player.x + (this.player.w / 2) - (tearSize / 2);
+				tearY = this.player.y;
+				break;
+				
+			case 2:
+				tearX = this.player.x + this.player.w/2 - tearSize;
+				tearY = this.player.y + (this.player.h / 2) - (tearSize / 2);
+				break;
+				
+			case 3:
+				tearX = this.player.x + (this.player.w / 2) - (tearSize / 2);
+				tearY = this.player.y + this.player.h/2;
+				break;
+		}
+		
+		let tear = new Projectile(tearX, tearY, tearSize, tearSize, Img.tear_image.src)
+		tear.setDirection(tearDir);
+		this.sprites.push(tear);
+		
+	}	
+
+	update()
+	{
+		for(let i = 0; i < this.sprites.length; i++)
+		{
+			if(!this.sprites[i].update()) {
+				// If returns false, remove from list
+				this.sprites.splice(i,1);
+			}
+			
+			// check to see if the tear has collided with a brick or pot
+			if(this.sprites[i].isProjectile()) {
+				for(let j = 0; j < this.sprites.length; j++){
+				
+					if(this.sprites[j].isBrick()) {
+					
+						if(this.spriteCollision(this.sprites[i], this.sprites[j])) {
+							this.sprites[i].collided();
+							break;
+						}
+					}
+					
+					if(this.sprites[j].isPot()) {
+					
+						if(!this.sprites[j].broken) {
+							if(this.spriteCollision(this.sprites[i], this.sprites[j])) {
+								this.sprites[i].collided();
+								this.sprites[j].tearCollision();
+								break;
+							}
+						}
+					}	
+				}
+			}
+			
+			// check to see if the pot has collided with a brick or pot
+			if(this.sprites[i].isPot()) {
+			
+				if(this.sprites[i].isSliding) {
+				
+					for(let j = 0; j < this.sprites.length; j++){
+					
+						if(this.sprites[j].isBrick()) {
+						
+							if(this.spriteCollision(this.sprites[i], this.sprites[j])) {
+								this.sprites[i].brickCollision();
+								break;
+							}
+						}
+						
+						if(this.sprites[j].isPot() && this.sprites[j] != this.sprites[i]) {
+						
+							if(this.spriteCollision(this.sprites[i], this.sprites[j])) {
+								this.sprites[i].brickCollision();
+								break;
+							}
+						}
+						
+					}
+				}
+			}
+			
+			// Make sure we are only checking betwen the player and the brick. 
+			// DO NOT check collision with player and itself, collision mishap will occur
+			if(!this.sprites[i].isPlayer()) {
+				if(this.spriteCollision(this.player, this.sprites[i])){
+					if(this.sprites[i].isBrick()) {
+						// collide with the brick
+						this.player.getOutOfSprite(this.sprites[i]);
+					}
+						
+					if(this.sprites[i].isPot()) {
+						// collide with the pot
+						this.player.getOutOfSprite(this.sprites[i]);
+						
+						// slide the pot
+						this.sprites[i].slide(this.player.getDirection());
+					}
+				}	
+			}
+		}
+	}
+	
+	spriteCollision(p, b){
+		if(p.right_side < b.left_side)
+			return false;
+		if(p.left_side > b.right_side)
+			return false;
+		if(p.bottom_side < b.top_side)
+			return false;
+		if(p.top_side > b.bottom_side)
+			return false;
+		return true;
+	}
+}
+
+
+
+
+class View
+{
+	constructor(model)
+	{
+		this.model = model;
+		this.canvas = document.getElementById("myCanvas");
+		
+		this.scrollPosX = 0;
+		this.scrollPosY = 0;
+	}
+	
+	update()
+	{
+		let ctx = this.canvas.getContext("2d");
+		ctx.clearRect(0, 0, 1500, 1000);
+		
+		for(let i = 0; i < this.model.sprites.length; i++)
+		{
+			let sprite = this.model.sprites[i];
+			ctx.drawImage(sprite.image, sprite.x - this.scrollPosX, sprite.y - this.scrollPosY);
+		}
+	}
+}
+
+
+
+
+
+
+
+class Controller
+{
+	constructor(model, view)
+	{
+		this.model = model;
+		this.view = view;
+		this.key_right = false;
+		this.key_left = false;
+		this.key_up = false;
+		this.key_down = false;
+		
+		this.key_shoot = false;
+				
+		let self = this;
+		document.addEventListener('keydown', function(event) { self.keyDown(event); }, false);
+		document.addEventListener('keyup', function(event) { self.keyUp(event); }, false);
+	}
+
+
+	keyDown(event)
+	{
+		if(event.keyCode == 39) this.key_right = true;
+		else if(event.keyCode == 37) this.key_left = true;
+		else if(event.keyCode == 38) this.key_up = true;
+		else if(event.keyCode == 40) this.key_down = true;
+		else if(event.keyCode == 17) this.key_shoot = false;
+	}
+
+	keyUp(event)
+	{
+		if(event.keyCode == 39) this.key_right = false;
+		else if(event.keyCode == 37) this.key_left = false;
+		else if(event.keyCode == 38) this.key_up = false;
+		else if(event.keyCode == 40) this.key_down = false;
+		else if(event.keyCode == 17) this.key_shoot = true;
+	}
+
+	shootTear() {
+		this.model.addTear();
+	}
+	
+	update()
+	{
+		this.model.player.savePrevLocation();
+		
+		let player = this.model.player;
+		let player_x = player.x;
+		let player_y = player.y;
+		
+		if(this.key_shoot) {
+			this.shootTear();
+			this.key_shoot = false;
+		}
+				
+		if((this.key_right && this.key_left && !this.key_up && !this.key_down) ||
+		   (!this.key_right && !this.key_left && this.key_up && this.key_down) ||
+		   (!this.key_right && !this.key_left && !this.key_up && !this.key_down)) {
+		   player.isIdle();
+		}
+		
+		
+		if(this.key_right && !this.key_left) {	
+			player.moveRight();
+			//player.setDirection(0);
+			
+			if(player_x > 500 && player_x < 1000)
+			{
+				this.view.scrollPosX = 500;
+			}
+			
+			if(player_x >= 1000)
+			{
+				this.view.scrollPosX = 1000;
+			}
+		}
+		
+		if(this.key_up && !this.key_down) {
+			player.moveUp();
+			//player.setDirection(1);
+			
+			if(player_y <= 500)
+			{
+				this.view.scrollPosY = 0;
+			}
+			
+			if(player_y > 500)
+			{
+				this.view.scrollPosY = 500;
+			}
+		}
+		
+		if(this.key_left && !this.key_right) {
+			player.moveLeft();
+			//player.setDirection(2);
+			
+			if(player_x < 500)
+			{
+				this.view.scrollPosX = 0;
+			}
+			
+			if(player_x >= 500 && player_x < 1000)
+			{
+				this.view.scrollPosX = 500;
+			}
+		}
+		
+		
+		
+		if(this.key_down && !this.key_up) {
+			player.moveDown();
+			//player.setDirection(3);
+			
+			if(player_y >= 500)
+			{
+				this.view.scrollPosY = 500;
+			}
+			
+			if(player_y < 500)
+			{
+				this.view.scrollPosY = 0;
+			}
+		}
+		
+	}
+}
+
+
+
+
+
+class Game
+{
+	constructor()
+	{
+		this.canvas = document.getElementById("myCanvas");
+	
+		this.tileSize = 50;
+		this.padding = 15;
+		
+		this.WIDTH = this.canvas.width;
+		this.HEIGHT = this.canvas.height;
+		
+		this.model = new Model();
+		this.view = new View(this.model);
+		this.controller = new Controller(this.model, this.view);
+	
+	}
+
+	onTimer()
+	{
+		this.controller.update();
+		this.model.update();
+		this.view.update();
+	}
+}
+
+let game = new Game();
+let timer = setInterval(function() { game.onTimer(); }, 40);
+
+</script>
+
+</body>
