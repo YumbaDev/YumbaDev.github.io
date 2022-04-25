@@ -55,7 +55,12 @@ p {
 	padding-bottom: 5px;
 }
 
-p.wip {
+p.legend-def{
+	font-size: 16px;
+	padding-bottom: 5px;
+}
+
+div.legend {
 	color: var(--Text); 
 	margin: 10px;
 	text-decoration: none;
@@ -66,7 +71,7 @@ p.wip {
 	right: 0;
 	
 	padding-right: 25px;
-	padding-bottom: 25px;
+	padding-bottom: 10px;
 }
 
 a {
@@ -104,4 +109,9 @@ nav img{
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+
+.tags {
+	float: right;
+	padding-right: 10px;
 }
