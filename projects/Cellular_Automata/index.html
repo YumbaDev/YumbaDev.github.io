@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cellular Automata</title>
+	<style>
+		:root {
+			--input-bg-color: #cfc8c0;
+			--solid-color: #bab0a4;
+			--air-color: #e4e0dc;
+			--background-color: #e4e0dc;
+
+			--border-color: #ccc;
+			--text-color: #000000;
+			--blue-color: #007bff;
+			--gray-color: #6c757d;
+			--green-color: #28a745;
+			--red-color: #dc3545;
+			--yellow-color: #ffc107;
+			--info-color: #17a2b8;
+			--light-color: #f8f9fa;
+			--dark-color: #343a40;
+			--link-color: #007bff;
+			--link-hover-color: #0056b3;
+		}
+
+		body {
+			background-color: var(--background-color);
+		}
+
+        #container {
+            display: flex;
+        }
+        
+        #inputs {	
+            flex-basis: 25%;
+			padding: 10px;
+            margin-right: 20px;
+			background-color: var(--input-bg-color);
+			display: block;
+			overflow: auto;
+			min-height: 50vh;
+        }
+        
+        #results {
+            flex-basis: 75%;
+        }
+
+        table {
+			border-collapse: collapse;
+		}
+        
+        #generate-btn {
+            margin-top: 10px;
+            margin-right: 16px;
+            width: 50%;
+			background-color: var(--green-color);
+			color: var(--light-color);
+			border: none;
+			border-radius: 5px;
+			padding: 5px;
+			cursor: pointer;
+		}
+		
+		#generate-btn:hover {
+			background-color: var(--gray-color);
+		}
+		
+		#step-btn {
+			margin-top: 10px;
+            width: 50%;
+			background-color: var(--blue-color);
+			color: var(--light-color);
+			border: none;
+			border-radius: 5px;
+			padding: 5px;
+			cursor: pointer;
+		}
+		
+		#step-btn:hover {
+			background-color: var(--gray-color);
+		}
+
+		#invert-btn {
+			margin-bottom: 16px;
+		}
+        
+        #btn-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .input-container {
+			margin-bottom: 10px;
+        }
+
+		.input-container label {
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: 5px;
+			white-space: nowrap;
+		}
+
+        .checkbox-container {
+            margin-bottom: 10px;
+        }
+
+        .checkbox-container label {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+		td {
+			height: 20px;
+			width: 20px;
+			text-align: center;
+			vertical-align: middle;
+			background-color: var(--air-color);
+			color: var(--text-color);
+			font-size: 14px;
+			font-weight: bold;
+		}
+
+		.solid {
+			background-color: var(--solid-color);
+		}
+
+		.air {
+			background-color: var(--air-color);
+		}
+
+	
+
+
+		.input-container {
+			display: flex;
+			flex-direction: column;
+			max-width: 150px;
+		}
+
+
+	</style>
+</head>
+<body>
+    <div id="container">
+		
+        <div id="inputs">
+            <div class="input-container">
+                <label for="numRows"># of Rows:</label>
+                <input type="number" id="numRows" name="numRows" value="16" min="1" max="50">
+            </div>
+            <div class="input-container">
+                <label for="numCols"># of Columns:</label>
+                <input type="number" id="numCols" name="numCols" value="16" min="1" max="50">
+            </div>
+            <div class="input-container">
+                <label for="probZero">NonSolid Probability (Default: 0.5)</label>
+                <input type="number" id="probZero" name="probZero" value="0.5" step="0.1" min="0" max="1">
+            </div>
+			<div class="input-container">
+                <label for="numToTurnSolid"># of Neighbors to turn Solid (Default: 5):</label>
+                <input type="number" id="numToTurnSolid" name="numToTurnSolid" value="5" min="1" max="8">
+            </div>
+			<div class="input-container">
+                <label for="numToTurnNonSolid"># of Neighbors to turn NonSolid (Default: 3):</label>
+                <input type="number" id="numToTurnNonSolid" name="numToTurnNonSolid" value="3" min="1" max="8">
+            </div>
+
+            <div id="btn-container">
+                <button id="generate-btn" onclick="generateGrid()">Generate New</button>
+                <button id="step-btn" onclick="performStep()">Perform Step</button>
+            </div>
+
+			<button id="invert-btn" onclick="invertGrid()">Invert Grid</button>
+
+            <div class="checkbox-container">
+                <label for="other-checkbox">Border:</label>
+                <input type="checkbox" id="toggle-checkbox" onclick="toggleBorder()">
+            </div>
+
+
+        </div>
+
+        <div id="results">
+            <table id="grid"></table>
+        </div>
+    </div>
+
+	<script>
+
+		let cells = [];
+		let hasBorder = false;
+
+	
+		function generateGrid() {
+
+			cells = [];
+
+			let numRows = parseInt(document.getElementById("numRows").value);
+			let numCols = parseInt(document.getElementById("numCols").value);
+			let probZero = parseFloat(document.getElementById("probZero").value);
+
+			let grid = document.getElementById("grid");
+			grid.innerHTML = "";
+
+			// Get the maximum number of cells that can fit within the grid without scrolling
+			let containerWidth = document.getElementById("results").clientWidth;
+			let containerHeight = document.getElementById("results").clientHeight;
+			let maxNumCols = Math.floor(containerWidth / 20); // Assuming each cell has a width of 20px
+			let maxNumRows = Math.floor(containerHeight / 20); // Assuming each cell has a height of 20px
+			let cellSize = Math.min(containerWidth / numCols, containerHeight / numRows, 20);
+
+			// Generate the grid
+			for (let i = 0; i < numRows; i++) {
+				cells.push([]);
+				let row = "<tr>";
+
+				for (let j = 0; j < numCols; j++) {
+
+					let cellClass = "solid";
+
+					if(i > 0 && i < numRows-1 && j > 0 && j < numCols-1){
+						cellClass = Math.random() < probZero ? "air" : "solid";
+					}
+
+					let cellValue = cellClass === "solid" ? 1 : 0;
+					
+					cells[i].push(cellValue);
+					
+					row += `<td class="${cellClass}" style="width: ${cellSize}px; height: ${cellSize}px;`;
+					if(hasBorder) row += `border: 1px solid var(--border-color);`;
+					row += `"></td>`;
+				}
+				
+				row += "</tr>";
+				grid.innerHTML += row;
+			}
+
+			console.log(cells);
+		}
+
+
+
+
+		function updateGrid() {
+			// Update the grid to show the changes
+			let grid = document.getElementById("grid");
+			let rows = grid.getElementsByTagName("tr");
+
+			for (let i = 0; i < rows.length; i++) {
+				let cellsInRow = rows[i].getElementsByTagName("td");
+				for (let j = 0; j < cellsInRow.length; j++) {
+					cellsInRow[j].className = cells[i][j] === 0 ? "air" : "solid";
+				}
+			}
+		}
+
+
+
+
+		function invertGrid() {
+			// Iterate through each cell and invert its value
+			for (let i = 0; i < cells.length; i++) {
+				for (let j = 0; j < cells[i].length; j++) {
+					cells[i][j] = cells[i][j] === 0 ? 1 : 0;
+				}
+			}
+
+			updateGrid();
+		}
+
+
+
+
+		function toggleBorder() {
+			hasBorder = !hasBorder;
+			let cells = document.getElementsByTagName("td");
+			for (let i = 0; i < cells.length; i++) {
+				if (hasBorder) {
+					cells[i].style.border = "1px solid var(--border-color)";
+				} else {
+					cells[i].style.border = "";
+				}
+			}
+		}
+
+
+
+		function countSolidNeighbors(row, col) {
+			let count = 0;
+			for (let i = -1; i <= 1; i++) {
+				for (let j = -1; j <= 1; j++) {
+				// Skip checking the cell itself
+				if (i === 0 && j === 0) continue;
+
+				// Check if neighbor cell is within bounds
+				let neighborRow = row + i;
+				let neighborCol = col + j;
+				if (neighborRow < 0 || neighborCol < 0 || neighborRow >= cells.length || neighborCol >= cells[0].length) {
+					continue;
+				}
+
+				// Count solid neighbors
+				if (cells[neighborRow][neighborCol] === 1) {
+					count++;
+				}
+				}
+			}
+			return count;
+		}
+
+
+
+
+		function performStep() {
+			let numToTurnSolid = parseInt(document.getElementById("numToTurnSolid").value);
+			let numToTurnNonSolid = parseInt(document.getElementById("numToTurnNonSolid").value);
+
+			console.log("numToTurnSolid = " + numToTurnSolid);
+			console.log("numToTurnNonSolid = " + numToTurnNonSolid);
+
+			let numRows = cells.length;
+			let numCols = cells[0].length;
+			let newCells = [];
+			for (let i = 0; i < numRows; i++) {
+				newCells[i] = [];
+				for (let j = 0; j < numCols; j++) {
+					if(i > 0 && i < numRows-1 && j > 0 && j < numCols-1){
+						let numSolidNeighbors = countSolidNeighbors(i, j);
+						if (cells[i][j] === 1) { // solid cell
+							if (numSolidNeighbors < numToTurnNonSolid) {
+								// cell dies due to underpopulation or overpopulation
+								newCells[i][j] = 0;
+							} else {
+								// cell survives
+								newCells[i][j] = 1;
+							}
+						} else { // air cell
+							if (numSolidNeighbors > numToTurnSolid) {
+								// cell becomes solid due to reproduction
+								newCells[i][j] = 1;
+							} else {
+								// cell remains air
+								newCells[i][j] = 0;
+							}
+						}
+					} else {
+						newCells[i][j] = 1;
+					}
+				}
+			}
+			cells = newCells;
+			updateGrid();
+		}
+
+		
+	</script>
+</body>
+</html>
