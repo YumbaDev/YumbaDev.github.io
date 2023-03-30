@@ -2,224 +2,15 @@
 <html>
 <head>
 	<title>Cellular Automata</title>
-	<style>
-		:root {
-			--input-bg-color: #cfc8c0;
-			--solid-color: #bab0a4;
-			--air-color: #e4e0dc;
-			--background-color: #e4e0dc;
-
-			--light-color: #f9f8f8;
-			--dark-color: #a59788;
-
-			--border-color: #e4e0dc;
-
-			--text-color: #000000;
-			--blue-color: #007bff;
-			--gray-color: #6c757d;
-			--green-color: #28a745;
-			--red-color: #dc3545;
-			--yellow-color: #ffc107;
-			--info-color: #17a2b8;
-			--link-color: #007bff;
-			--link-hover-color: #0056b3;
-		}
-
-		body {
-			background-color: var(--background-color);
-		}
-
-		table {
-			border-collapse: collapse;
-			border: 1px solid var(--solid-color);
-		}
-
-		fieldset {
-			margin-bottom: 10px;
-			background-color: var(--background-color);;
-		}
-
-		legend {
-			background-color: var(--dark-color);;
-			color: white;
-			padding: 5px 10px;
-		}
-		
-        #container {
-            display: flex;
-        }
-        
-        #inputs {	
-            flex-basis: 30%;
-			padding: 10px;
-            margin-right: 20px;
-			background-color: var(--input-bg-color);
-			display: block;
-			overflow: auto;
-        }
-        
-        #results {
-            flex-basis: 70%;
-			margin-right: 10px;
-			max-height: 50vh;
-        }
-        
-        #generate-btn {
-            margin-top: 10px;
-            margin-right: 16px;
-            width: 50%;
-			background-color: var(--green-color);
-			color: var(--light-color);
-			border: none;
-			border-radius: 5px;
-			padding: 5px;
-			cursor: pointer;
-			height: 35px;
-		}
-		
-		#generate-btn:hover {
-			background-color: var(--gray-color);
-		}
-		
-		#step-btn {
-			margin-top: 10px;
-            width: 50%;
-			background-color: var(--blue-color);
-			color: var(--light-color);
-			border: none;
-			border-radius: 5px;
-			padding: 5px;
-			cursor: pointer;
-			height: 35px;
-		}
-		
-		#step-btn:hover {
-			background-color: var(--gray-color);
-		}
-
-		#invert-btn {
-			margin-bottom: 16px;
-		}
-        
-        #main-btn-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-		.input-container label {
-			display: inline-block;
-			vertical-align: middle;
-			margin-right: 5px;
-			white-space: nowrap;
-		}
-
-        .checkbox-container {
-            margin-bottom: 10px;
-        }
-
-        .checkbox-container label {
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 5px;
-        }
-
-        .checkbox-container input[type="checkbox"] {
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-		td {
-			height: 20px;
-			width: 20px;
-			text-align: center;
-			vertical-align: middle;
-			background-color: var(--air-color);
-			color: var(--text-color);
-			font-size: 14px;
-			font-weight: bold;
-		}
-
-		.solid {
-			background-color: var(--solid-color);
-		}
-
-		.air {
-			background-color: var(--air-color);
-		}
-
-		.input-container {
-			display: flex;
-			margin-bottom: 10px;
-			flex-direction: column;
-			max-width: 25%;
-		}
-
-		.btn-grid-container{
-			display: grid;
-			grid-template-columns: repeat(3, 1fr);
-			grid-gap: 5px;
-			padding: 0;
-			margin: 0;
-			overflow: hidden;
-		}
-
-		.small-btn{
-			width: 100%;
-			height: 35px;
-		}
-
-		.custom-steps-container{
-			margin-bottom: 10px;
-		}
-
-		#numSteps{
-			width: 25%;
-		}
-
-		#numStepsBtn{
-			width: 25%;
-			float: right;
-		}
-
-		.code-input-container {
-			display: flex;
-			margin-bottom: 10px;
-			flex-direction: column;
-			max-width: 100%;
-			resize:both;
-		}
-
-		/* Containers for export/import grid codes */
-		.code-grid-container{
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			grid-gap: 5px;
-			padding: 0;
-			margin: 0;
-			margin-bottom: 10px;
-			overflow: hidden;
-		}
-
-		.code-input-container{
-			display: flex;
-			margin-bottom: 0;
-			margin-right: 25px;
-		}
-
-		.code-btn-container{
-			display: flex;
-            justify-content: space-between;
-            align-items: center;
-		}
-
-	</style>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="container">
         <div id="inputs">
 			<h2>Cellular Automata</h2>
+
+			<!-- debug -->
+			<button id="generate-solid-blocks-btn" onclick="generateGridWithSolidBlocks()">Generate New w/Perm-Solids</button>
 
 			<fieldset>
 				<legend>Input</legend>
@@ -295,8 +86,10 @@
 				<legend>Preferences</legend>
 
 				<div class="checkbox-container">
-					<label for="other-checkbox">Show Grid Border:</label>
-					<input type="checkbox" id="toggle-checkbox" onclick="toggleBorder()">
+					<label for="border-checkbox">Show Grid Border:</label>
+					<input type="checkbox" id="border-checkbox" onclick="toggleBorder()">
+					<label for="solid-block-checkbox">Show Solid Blocks:</label>
+					<input type="checkbox" id="solid-block-checkbox" onclick="toggleSolidBlockVisibility()">
 				</div>
 			</fieldset>
 
@@ -322,6 +115,36 @@
 				</div>
 			</fieldset>
 
+
+			<fieldset>
+				<legend>Perm-Solid Input</legend>
+	
+				<label for="numBlocks">Number of Perm-Solid Regions:</label>
+				<div class="input-container">
+					<input type="number" id="numBlocks" name="numBlocks" value="2" min="1" max="96">
+				</div>
+
+				<label for="numRows">Min Width:</label>
+				<div class="input-container">
+					<input type="number" id="minWidth" name="minWidth" value="8" min="1" max="96">
+				</div>
+	
+				<label for="numRows">Max Width:</label>
+				<div class="input-container">
+					<input type="number" id="maxWidth" name="maxWidth" value="16" min="1" max="96">
+				</div>
+	
+				<label for="numRows">Min Height:</label>
+				<div class="input-container">
+					<input type="number" id="minHeight" name="minHeight" value="8" min="1" max="96">
+				</div>
+	
+				<label for="numRows">Max Height:</label>
+				<div class="input-container">
+					<input type="number" id="maxHeight" name="maxHeight" value="16" min="1" max="96">
+				</div>
+			</fieldset>
+
         </div>
 
         <div id="results">
@@ -334,7 +157,8 @@
 		let cells = [];
 		let original_cells = cells;
 		let cells_history = [];
-		let hasBorder = false;
+		let showBorder = false;
+		let showSolidBlocks = false;
 		let finishedSteps = false;
 
 	
@@ -393,7 +217,7 @@
 					cells[i].push(cellValue);
 					
 					row += `<td class="${cellClass}" style="width: ${cellSize}px; height: ${cellSize}px;`;
-					if(hasBorder) row += `border: 1px solid var(--border-color);`;
+					if(showBorder) row += `border: 1px solid var(--border-color);`;
 					row += `"></td>`;
 				}
 				
@@ -417,7 +241,21 @@
 			for (let i = 0; i < rows.length; i++) {
 				let cellsInRow = rows[i].getElementsByTagName("td");
 				for (let j = 0; j < cellsInRow.length; j++) {
-					cellsInRow[j].className = cells[i][j] === 0 ? "air" : "solid";
+
+					let className = "";
+					switch(cells[i][j]){
+						case 0:
+							className = "air";
+							break;
+						case 1:
+							className = "solid";
+							break;
+						case -1:
+							className = (showSolidBlocks) ? "perm-solid" : "solid";
+							break;
+					}
+
+					cellsInRow[j].className = className;
 				}
 			}
 		}
@@ -462,7 +300,7 @@
 					cells[i].push(cellValue);
 					
 					row += `<td class="${cellClass}" style="width: ${cellSize}px; height: ${cellSize}px;`;
-					if(hasBorder) row += `border: 1px solid var(--border-color);`;
+					if(showBorder) row += `border: 1px solid var(--border-color);`;
 					row += `"></td>`;
 				}
 				
@@ -491,13 +329,32 @@
 
 
 		function toggleBorder() {
-			hasBorder = !hasBorder;
+			showBorder = !showBorder;
 			let cells = document.getElementsByTagName("td");
 			for (let i = 0; i < cells.length; i++) {
-				if (hasBorder) {
+				if (showBorder) {
 					cells[i].style.border = "1px solid var(--border-color)";
 				} else {
 					cells[i].style.border = "";
+				}
+			}
+		}
+
+		function toggleSolidBlockVisibility() {
+
+			showSolidBlocks = !showSolidBlocks;
+			
+			let grid = document.getElementById("grid");
+			let rows = grid.getElementsByTagName("tr");
+
+			for (let i = 0; i < rows.length; i++) {
+				let cellsInRow = rows[i].getElementsByTagName("td");
+				for (let j = 0; j < cellsInRow.length; j++) {
+					if(cells[i][j] === -1){
+						let className = "";
+						className = (showSolidBlocks) ? "perm-solid" : "solid";
+						cellsInRow[j].className = className;
+					}
 				}
 			}
 		}
@@ -508,20 +365,20 @@
 			let count = 0;
 			for (let i = -1; i <= 1; i++) {
 				for (let j = -1; j <= 1; j++) {
-				// Skip checking the cell itself
-				if (i === 0 && j === 0) continue;
+					// Skip checking the cell itself
+					if (i === 0 && j === 0) continue;
 
-				// Check if neighbor cell is within bounds
-				let neighborRow = row + i;
-				let neighborCol = col + j;
-				if (neighborRow < 0 || neighborCol < 0 || neighborRow >= cells.length || neighborCol >= cells[0].length) {
-					continue;
-				}
+					// Check if neighbor cell is within bounds
+					let neighborRow = row + i;
+					let neighborCol = col + j;
+					if (neighborRow < 0 || neighborCol < 0 || neighborRow >= cells.length || neighborCol >= cells[0].length) {
+						continue;
+					}
 
-				// Count solid neighbors
-				if (cells[neighborRow][neighborCol] === 1) {
-					count++;
-				}
+					// Count solid neighbors
+					if (cells[neighborRow][neighborCol] === 1 || cells[neighborRow][neighborCol] === -1) {
+						count++;
+					}
 				}
 			}
 			return count;
@@ -559,7 +416,7 @@
 								// cell survives
 								newCells[i][j] = 1;
 							}
-						} else { // nonsolid cell
+						} else if(cells[i][j] === 0){ // nonsolid cell
 							if (numSolidNeighbors > numToTurnSolid) {
 								// cell becomes solid due to reproduction
 								newCells[i][j] = 1;
@@ -568,6 +425,9 @@
 								// cell remains nonsolid
 								newCells[i][j] = 0;
 							}
+						} else if(cells[i][j] === -1){ // perm solid cell
+							// do nothing
+							newCells[i][j] = -1;
 						}
 					} else {
 						newCells[i][j] = 1;
@@ -603,21 +463,28 @@
 
 		function revertStep(){
 
-				if(cells_history === undefined || cells_history.length === 0){
-					console.log("// ERR: Cell history is undefined");
-					return;
-				}
+			if(cells_history === undefined || cells_history.length === 0){
+				console.log("// ERR: Cell history is undefined");
+				return;
+			}
 
-				cells = cells_history.pop();
-				finishedSteps = false;
-				updateGrid();
+			cells = cells_history.pop();
+			finishedSteps = false;
+			updateGrid();
 
-				console.log("// Went back a step")
+			console.log("// Went back a step")
 			
 		}
 
 		function customNumSteps(){
-			let numSteps = parseInt(document.getElementById("numSteps").value);
+			let numSteps = document.getElementById("numSteps").value;
+
+			if(numSteps === ""){
+				alert("Enter the number of steps you wish to perform!");
+				return;
+			}
+
+			numSteps = parseInt(numSteps);
 
 			while(numSteps--){
 				console.log(numSteps);
@@ -723,6 +590,68 @@
 			
 
 			// 2,2,1,0,1,0
+		}
+
+
+
+		// helper method for generateSolidBlocks()
+		function random_range(min, max) {
+			min = Math.ceil(min);
+			max = Math.floor(max);
+			return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+		}
+
+
+
+		function generateGridWithSolidBlocks(){
+			generateGrid();
+
+			let numRows = document.getElementById("numRows").value;
+			let numCols = document.getElementById("numCols").value;
+
+			let numBlocks = document.getElementById("numBlocks").value;
+			let minBlockWidth = document.getElementById("minWidth").value;
+			let maxBlockWidth = document.getElementById("maxWidth").value;
+			let minBlockHeight = document.getElementById("minHeight").value;
+			let maxBlockHeight = document.getElementById("maxHeight").value;
+
+			// large grid (96,96)
+			// 16, 24
+
+			for(let i = 0; i < numBlocks; i++){
+				generateSolidBlocks(minBlockWidth,maxBlockWidth,minBlockHeight,maxBlockHeight,numRows,numCols);
+			}
+
+			updateGrid();
+		}
+
+
+		// will generate blocks of solid cells that are immutable
+		function generateSolidBlocks(minBlockWidth, maxBlockWidth, minBlockHeight, maxBlockHeight, numRows, numCols){
+		
+			let blockWidth = random_range(minBlockWidth, maxBlockWidth);
+			let blockHeight = random_range(minBlockHeight, maxBlockHeight);
+
+			if(numRows === "" || numCols === "" || probZero === ""){
+				alert("Cannot leave input fields empty!");
+				return;
+			}
+
+			numRows = parseInt(numRows);
+			numCols = parseInt(numCols);
+
+			let startRow = random_range(0, numRows-blockHeight);
+			let startCol = random_range(0, numCols-blockWidth);
+
+			for(let i = 1; i < blockHeight; i++){
+
+				for(let j = 1; j < blockWidth; j++){
+					cells[startRow+i][startCol+j] = -1;
+				}
+			}
+
+			original_cells = cells;
+			console.log("// Generated Solid Blocks");
 		}
 
 	</script>
