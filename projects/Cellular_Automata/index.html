@@ -7,37 +7,28 @@
 <body>
     <div id="container">
         <div id="inputs">
-			<h2>Cellular Automata</h2>
-
-			<!-- debug -->
-			<button id="generate-solid-blocks-btn" onclick="generateGridWithSolidBlocks()">Generate New w/Perm-Solids</button>
-
+	
 			<fieldset>
 				<legend>Input</legend>
-
-				<label for="numRows"># of Rows:</label>
-				<div class="input-container">
-					<input type="number" id="numRows" name="numRows" value="32" min="16" max="96" placeholder="32">
+				
+				<div class="sub-input-box">
+					<label class="side-label"><b>Rows:</b></label>
+					<input class="side-input-field" type="number" id="numRows" name="numRows" value="32" min="16" max="96" placeholder="32">
+					<label class="side-label"><b>Cols:</b></label>
+					<input class="side-input-field" type="number" id="numCols" name="numCols" value="32" min="16" max="96" placeholder="32">
 				</div>
 
-				<label for="numCols"># of Columns:</label>
-				<div class="input-container">
-					<input type="number" id="numCols" name="numCols" value="32" min="16" max="96" placeholder="32">
+				<div class="sub-input-box">
+					<label for="probZero" class="side-label"><b>NonSolid Odds:</b></label>
+					<input class="side-input-field" type="number" id="probZero" name="probZero" value="0.6" step="0.1" min="0" max="1" placeholder="0.6">
 				</div>
 
-				<label for="probZero">NonSolid Probability</label>
-				<div class="input-container">
-					<input type="number" id="probZero" name="probZero" value="0.6" step="0.1" min="0" max="1" placeholder="0.6">
-				</div>
-
-				<label for="numToTurnSolid"># of Neighbors to turn Solid:</label>
-				<div class="input-container">
-					<input type="number" id="numToTurnSolid" name="numToTurnSolid" value="4" min="1" max="8" placeholder="4">
-				</div>
-
-				<label for="numToTurnNonSolid"># of Neighbors to turn NonSolid:</label>
-				<div class="input-container">
-					<input type="number" id="numToTurnNonSolid" name="numToTurnNonSolid" value="3" min="1" max="8" placeholder="3">
+				<label for="numToTurnSolid"><b># of Neighbors to turn...</b></label>
+				<div class="sub-input-box">
+					<label class="side-label">Solid:</label>
+					<input class="side-input-field" type="number" id="numToTurnSolid" name="numToTurnSolid" value="4" min="1" max="8" placeholder="4">
+					<label class="side-label">NonSolid:</label>
+					<input class="side-input-field" type="number" id="numToTurnNonSolid" name="numToTurnNonSolid" value="3" min="1" max="8" placeholder="3">
 				</div>
 
 			</fieldset>
@@ -49,14 +40,18 @@
 
 				<div id="main-btn-container">
 					<button id="generate-btn" onclick="generateGrid()">Generate New</button>
-					<button id="step-btn" onclick="performStep()">Perform Step</button>
+					<button id="step-btn" onclick="performStep()">Single Step</button>
 				</div>
 
-				<label for="numSteps">Perform Given # of Steps:</label>
-				<div class="custom-steps-container">
+
+				<div class="sub-input-box">
+					<label for="numSteps"><b># of Steps:</b></label>
 					<input type="number" id="numSteps" name="numSteps" value="5" min="1" max="10" placeholder="5">
-					<input type="button" value=" Go " id="numStepsBtn" onclick="customNumSteps()" >
+					<input type="button" value="Go" id="numStepsBtn" onclick="customNumSteps()" >
 				</div>
+
+				<label id="current-step-count">Current Step: 0</label>
+
 			</fieldset>
 
 
@@ -72,7 +67,7 @@
 						<button id="revert-btn" onclick="revertOriginal()" class="small-btn">Revert to Original</button>
 					</div>
 					<div class="btn-grid-item">
-						<button id="undo-btn" onclick="revertStep()" class="small-btn">Revert step</button>
+						<button id="undo-btn" onclick="revertStep()" class="small-btn">Revert a Step</button>
 					</div>
 					<div class="btn-grid-item">
 						<button id="invert-btn" onclick="invertGrid()" class="small-btn">Invert Grid</button>
@@ -83,69 +78,75 @@
 
 
 			<fieldset>
+				<legend>Perm-Solid Input</legend>
+	
+				<div class="button-container">
+				<button id="generate-solid-blocks-btn" class="main-btn" onclick="generateGridWithSolidBlocks()">Generate New w/Perm-Solids</button>
+				</div>
+
+				<div class="sub-input-box">
+					<label for="numBlocks" class="side-label"><b># of Perm-Solid Regions:</b></label>
+					<input class="side-input-field" type="number" id="numBlocks" name="numBlocks" value="2" min="1" max="96">
+				</div>
+
+				<!-- debug -->
+				<label for="numCols"><b>Width</b></label>
+				<div class="sub-input-box">
+					<label class="side-label">Min:</label>
+					<input type="number" id="minWidth" name="minWidth" value="8" min="1" max="96">
+					<label class="side-label">Max:</label>
+					<input type="number" id="maxWidth" name="maxWidth" value="16" min="1" max="96">
+				</div>
+
+				<label for="numRows"><b>Min Height:</b></label>
+				<div class="sub-input-box">
+					<label class="side-label">Min:</label>
+					<input type="number" id="minHeight" name="minHeight" value="8" min="1" max="96">
+					<label class="side-label">Max:</label>
+					<input type="number" id="maxHeight" name="maxHeight" value="16" min="1" max="96">
+				</div>
+
+			</fieldset>
+
+
+			<fieldset>
 				<legend>Preferences</legend>
 
-				<div class="checkbox-container">
-					<label for="border-checkbox">Show Grid Border:</label>
-					<input type="checkbox" id="border-checkbox" onclick="toggleBorder()">
-					<label for="solid-block-checkbox">Show Solid Blocks:</label>
-					<input type="checkbox" id="solid-block-checkbox" onclick="toggleSolidBlockVisibility()">
+				<div class="checkbox-grid-container">
+					<div class="checkbox-grid-item">
+						<input class="side-checkbox" type="checkbox" id="border-checkbox" onclick="toggleBorder()">
+						<label for="border-checkbox" class="side-label">Show Grid Border</label>
+					</div>
+
+					<div class="checkbox-grid-item">
+						<input class="side-checkbox" type="checkbox" id="solid-block-checkbox" onclick="toggleSolidBlockVisibility()">
+						<label for="solid-block-checkbox" class="side-label">Show Solid Blocks</label>
+					</div>
 				</div>
+
 			</fieldset>
 
 
 
 			<fieldset>
 				<legend>Grid Code</legend>
+
 				<div class="code-grid-container">
-					<div class="code-input-container">
-						<div class="grid-item">
-							<input type="text" id="code-input" name="code-input" value="" placeholder="Imports/Exports here">
-						</div>
+					<div class="code-grid-item">
+						<input type="text" id="code-input" name="code-input" value="" placeholder="Imports/Exports here">
 					</div>
 
-					<div class="code-btn-container">
-						<div class="grid-item">
-							<button id="code-import-btn" onclick="importCode()">Import</button>
-						</div>
-						<div class="grid-item">
-							<button id="code-export-btn" onclick="exportCode()">Export</button>
-						</div>
+					<div class="code-grid-item">
+						<button id="code-import-btn" onclick="importCode()">Import</button>
+						<button id="code-export-btn" onclick="exportCode()">Export</button>
 					</div>
+
 				</div>
 			</fieldset>
 
-
-			<fieldset>
-				<legend>Perm-Solid Input</legend>
-	
-				<label for="numBlocks">Number of Perm-Solid Regions:</label>
-				<div class="input-container">
-					<input type="number" id="numBlocks" name="numBlocks" value="2" min="1" max="96">
-				</div>
-
-				<label for="numRows">Min Width:</label>
-				<div class="input-container">
-					<input type="number" id="minWidth" name="minWidth" value="8" min="1" max="96">
-				</div>
-	
-				<label for="numRows">Max Width:</label>
-				<div class="input-container">
-					<input type="number" id="maxWidth" name="maxWidth" value="16" min="1" max="96">
-				</div>
-	
-				<label for="numRows">Min Height:</label>
-				<div class="input-container">
-					<input type="number" id="minHeight" name="minHeight" value="8" min="1" max="96">
-				</div>
-	
-				<label for="numRows">Max Height:</label>
-				<div class="input-container">
-					<input type="number" id="maxHeight" name="maxHeight" value="16" min="1" max="96">
-				</div>
-			</fieldset>
 
         </div>
+		
 
         <div id="results">
             <table id="grid"></table>
@@ -154,6 +155,7 @@
 
 	<script>
 
+		let currStepCount = 0;
 		let cells = [];
 		let original_cells = cells;
 		let cells_history = [];
@@ -161,8 +163,25 @@
 		let showSolidBlocks = false;
 		let finishedSteps = false;
 
+		function resetStepCount(){
+			currStepCount = 0;
+			document.getElementById("current-step-count").innerHTML = "Current Step: " + currStepCount;
+		}
+
+		function incrementStepCount(){
+			currStepCount++;
+			document.getElementById("current-step-count").innerHTML = "Current Step: " + currStepCount;
+
+		}
+
+		function decrementStepCount(){
+			currStepCount--;
+			document.getElementById("current-step-count").innerHTML = "Current Step: " + currStepCount;
+		}
 	
 		function generateGrid() {
+			resetStepCount();
+
 			finishedSteps = false;
 
 			let numRows = document.getElementById("numRows").value;
@@ -439,21 +458,24 @@
 				cells_history.push(cells);
 				cells = newCells;
 				updateGrid();
+				incrementStepCount();
 				console.log("// Performed step");
 				finishedSteps = false;
 			} else {
 				if(!doMaxStep) alert("Cannot step further");
 				finishedSteps = true;
 			}		
-			
+
 			return finishedSteps;
 		}
 
 
 
 		function revertOriginal(){
+			
 			cells = original_cells;
 			cells_history = [];
+			resetStepCount();
 			finishedSteps = false;
 			updateGrid();
 
@@ -465,11 +487,13 @@
 
 			if(cells_history === undefined || cells_history.length === 0){
 				console.log("// ERR: Cell history is undefined");
+				alert("No steps left to revert!");
 				return;
 			}
 
 			cells = cells_history.pop();
 			finishedSteps = false;
+			decrementStepCount();
 			updateGrid();
 
 			console.log("// Went back a step")
@@ -485,6 +509,11 @@
 			}
 
 			numSteps = parseInt(numSteps);
+
+			if(numSteps <= 0){
+				alert("Number of steps must be greater than 0!");
+				return;
+			}
 
 			while(numSteps--){
 				console.log(numSteps);
@@ -523,6 +552,10 @@
 
 			// LARGE OPEN CAVE
 			// 0.6, 4, 4, 5
+
+			// FUN PERM-SOLID CAVE GEN
+			// defualt
+			// nonSolid Odds = 0.7
 		}
 
 
