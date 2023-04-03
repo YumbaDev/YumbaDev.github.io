@@ -28,6 +28,8 @@ body {
 table {
     border-collapse: collapse;
     border: 1px solid var(--solid-color);
+    margin: 0 auto; /* or margin: 0 auto 0 auto */
+
 }
 
 fieldset {
@@ -48,8 +50,8 @@ legend {
 
 
 /* SIDE-BY-SIDE SECTIONS */     
-#inputs {	
-    flex-basis: 30%;
+#inputs-1 {	
+    flex-basis: 33%;
     padding: 10px;
     margin-right: 20px;
     background-color: var(--input-bg-color);
@@ -57,8 +59,17 @@ legend {
     overflow: auto;
 }
 
+#inputs-2 {	
+    flex-basis: 33%;
+    padding: 10px;
+    margin-left: 20px;
+    background-color: var(--input-bg-color);
+    display: block;
+    overflow: auto;
+}
+
 #results {
-    flex-basis: 70%;
+    flex-basis: 73%;
     margin-right: 10px;
     max-height: 50vh;
 }
