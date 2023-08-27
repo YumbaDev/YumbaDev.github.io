@@ -16,7 +16,7 @@ class Game {
     }
 
     start() {
-        const stepInterval = 200; // ms
+        const stepInterval = 100; // ms
         this.gameLoop = setInterval(this.Update.bind(this), stepInterval);
     }
 }
