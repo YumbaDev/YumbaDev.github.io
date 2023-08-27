@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SolAIre</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <meta charset="UTF-8">
+    </head>
+
+    <body>
+        <script src="Game.js"></script>
+        <script src="BaseGameEntity.js"></script>
+        <script src="Dwarf.js"></script>
+        <script src="World.js"></script>
+        <script src="State.js"></script>
+        <script src="StateMachine.js"></script>
+        <script src="EnterMineAndDigForNugget.js"></script>
+        <script src="GoHomeAndSleepUntilRested.js"></script>
+        <script src="VisitBankAndDepositGold.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const game = new Game();
+                game.start();
+            });
+        </script>
+
+
+
+        <dl class="WorldPropertyTable" id="WorldPropertyTable" >
+            <div class="WorldProperties">
+            <dt><b>Current Time:</b></dt>
+            <dd id="CurrentTime">0</dd>
+    
+            <dt><b>Current Day:</b></dt>
+            <dd id="DayCount">0</dd>
+    
+            <dt><b>Time of Day:</b></dt>
+            <dd id="TimeOfDay">Night</dd>
+            </div>
+
+            <div class="WeatherIcon" id="WeatherIcon"></div>
+        </dl>
+
+
+        <table id="DwarfPropertyTable" border="1">
+            <tr>
+                <th>Property</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Gold Carried</td>
+                <td id="GoldCarried"></td>
+            </tr>
+            <tr>
+                <td>Pocket Size</td>
+                <td id="PocketLimit"></td>
+            </tr>
+            <tr>
+                <td>Bank Savings</td>
+                <td id="MoneyInBank"></td>
+            </tr>
+            <tr>
+                <td>Thirst Level</td>
+                <td id="Thirst"></td>
+            </tr>
+            <tr>
+                <td>Fatigue Level</td>
+                <td id="Fatigue"></td>
+            </tr>
+            <tr>
+                <td>Fatigue Limit</td>
+                <td id="FatigueLimit"></td>
+            </tr>
+        </table>
+
+    </body>
+
+</html>
