@@ -8,6 +8,7 @@
 
     <body>
         <script src="Game.js"></script>
+        <script src="ConsoleLogger.js"></script>
         <script src="BaseGameEntity.js"></script>
         <script src="Dwarf.js"></script>
         <script src="World.js"></script>
@@ -20,58 +21,70 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const game = new Game();
-                game.start();
-            });
+                game.Start();
+                            });
         </script>
 
+        <div class="container">
 
-
-        <dl class="WorldPropertyTable" id="WorldPropertyTable" >
-            <div class="WorldProperties">
-            <dt><b>Current Time:</b></dt>
-            <dd id="CurrentTime">0</dd>
-    
-            <dt><b>Current Day:</b></dt>
-            <dd id="DayCount">0</dd>
-    
-            <dt><b>Time of Day:</b></dt>
-            <dd id="TimeOfDay">Night</dd>
-            </div>
-
-            <div class="WeatherIcon" id="WeatherIcon"></div>
-        </dl>
-
-
-        <table id="DwarfPropertyTable" border="1">
+        <table id="DwarfPropertyTable">
             <tr>
+                <th></th>
                 <th>Property</th>
                 <th>Value</th>
             </tr>
             <tr>
+                <td>⚡</td>
+                <td>Energy</td>
+                <td id="EnergyDisplay"></td>
+            </tr>
+            <tr>
+                <td>🟡</td>
                 <td>Gold Carried</td>
                 <td id="GoldCarried"></td>
             </tr>
             <tr>
-                <td>Pocket Size</td>
-                <td id="PocketLimit"></td>
-            </tr>
-            <tr>
+                <td>💰</td>
                 <td>Bank Savings</td>
                 <td id="MoneyInBank"></td>
             </tr>
             <tr>
-                <td>Thirst Level</td>
-                <td id="Thirst"></td>
+                <td>🍗</td>
+                <td>Hunger</td>
+                <td id="HungerDisplay"></td>
             </tr>
             <tr>
-                <td>Fatigue Level</td>
-                <td id="Fatigue"></td>
+                <td>💧</td>
+                <td>Thirst</td>
+                <td id="ThirstDisplay"></td>
             </tr>
             <tr>
-                <td>Fatigue Limit</td>
-                <td id="FatigueLimit"></td>
+                <td>🎒</td>
+                <td>Pocket Size</td>
+                <td id="PocketLimit"></td>
             </tr>
         </table>
+
+        <dl class="WorldPropertyTable" id="WorldPropertyTable" >
+            <div class="WorldProperties">
+                <dt><b>Current Time:</b></dt>
+                <dd id="CurrentTime">0</dd>
+        
+                <dt><b>Current Day:</b></dt>
+                <dd id="DayCount">0</dd>
+        
+                <dt><b>Time of Day:</b></dt>
+                <dd id="TimeOfDay">Night</dd>
+            </div>
+            <div class="WeatherIcon" id="WeatherIcon"></div>
+        </dl>
+
+        </div>
+
+        <div class="console">
+            <!-- Log messages will be displayed here -->
+        </div>
+
 
     </body>
 

@@ -8,12 +8,14 @@ class VisitBankAndDepositGold extends State {
 
     Enter(dwarf){
         console.log("Goin' to the bank, yes siree");
+        ConsoleLog(dwarf, "Goin' to the bank, yes siree");
     }
 
     Execute(dwarf){
         dwarf.DepositGoldInBank();
 
         console.log("Depositin' mah gold. Total savings now: " + dwarf.GetTotalSavings());
+        ConsoleLog(dwarf, "Depositin' mah gold. Total savings now: " + dwarf.GetTotalSavings());
 
         if(dwarf.IsExhausted()){
             dwarf.m_pStateMachine.ChangeState(GoHomeAndSleepUntilRested.Instance());
@@ -24,5 +26,6 @@ class VisitBankAndDepositGold extends State {
 
     Exit(dwarf){
         console.log("Woohoo! Rich enuff' fo' now, leavin' tha bank");
+        ConsoleLog(dwarf, "Woohoo! Rich enuff' fo' now, leavin' tha bank");
     }
 }

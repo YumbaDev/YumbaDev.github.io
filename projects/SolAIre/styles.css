@@ -1,3 +1,15 @@
+
+.container {
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#DwarfPropertyTable, #WorldPropertyTable {
+    float: left; 
+    margin-right: 10px;
+}
+
 #WorldPropertyTable {
     font-family: "Arial", sans-serif; 
     font-size: 18px; 
@@ -6,29 +18,77 @@
     transition: background-color 2s;
     position: relative;
     align-items: center;
-}
+    width: auto;
+    margin: 0;
 
-.WorldPropertyTable{
-    width: 50%;
+    display: flex; 
 }
 
 .WorldProperties{
-    display: inline-block;
-    padding: 1em; 
     background-color: rgba(0, 0, 0, 0.15);
+    height: 100%;
+    padding: 1em;
+
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
 }
 
 .WeatherIcon {
-    position: absolute;
-    font-size: 48px; 
-    top: 0;
-    right: 0;
+    position: relative;
+    font-size: 48px;
     padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: -2px -2px 0 white,
+        2px -2px 0 white,
+        -2px 2px 0 white,
+        2px 2px 0 white;
 }
 
-.WeatherIcon {
-    text-shadow:-2px -2px 0 white, 
-                2px -2px 0 white, 
-                -2px 2px 0 white, 
-                2px 2px 0 white;
+
+#DwarfPropertyTable {
+    font-family: "Arial", sans-serif; 
+    border-collapse: collapse;
+    border: none;
+    background-color: #EBF5FB;
+}
+
+#DwarfPropertyTable th {
+    background-color: #3498DB;
+    color: white;
+    padding: 5px;
+}
+
+#DwarfPropertyTable td {
+    height: 25px;
+}
+
+#DwarfPropertyTable tr {
+    border-bottom: 1px solid #D5D8DC;
+}
+#DwarfPropertyTable tr:last-child {
+    border-bottom: none;
+}
+
+#DwarfPropertyTable td:nth-child(2) {
+    font-weight: bold;
+}
+#DwarfPropertyTable td:first-child,
+#DwarfPropertyTable td:last-child {
+    text-align: center;
+}
+
+
+/* CONSOLE */
+.console {
+    width: 100%;
+    height: 300px; /* Adjust the desired height */
+    overflow: auto;
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    padding: 10px;
+    box-sizing: border-box;
 }
